@@ -48,6 +48,7 @@ class ApplicationResource extends Resource
             'index' => ListApplications::route('/'),
             'create' => CreateApplication::route('/create'),
             'edit' => EditApplication::route('/{record}/edit'),
+            'compare-ai' => \App\Filament\Resources\Applications\Pages\CompareAiScreenings::route('/{record}/compare-ai'),
         ];
     }
 

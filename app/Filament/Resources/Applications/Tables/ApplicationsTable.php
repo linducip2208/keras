@@ -172,9 +172,63 @@ class ApplicationsTable
                     ->modalWidth('xl'),
 
                 EditAction::make(),
+                Action::make('compare_ai')
+                    ->label('Compare AI')
+                    ->icon('heroicon-o-chart-bar')
+                    ->color('warning')
+                    ->visible(fn ($record) => $record->aiScreenings()->exists())
+                    ->url(fn ($record) => "/admin/applications/{$record->id}/compare-ai"),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()]),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    \Filament\Actions\BulkAction::make('bulk_ai_screen')
+                        ->label('🧠 Bulk AI Screen')
+                        ->icon('heroicon-o-cpu-chip')
+                        ->color('info')
+                        ->schema(function () {
+                            $adapters = \App\Models\AdapterConfig::query()
+                                ->where('domain', 'llm')->where('is_active', true)->get();
+                            if ($adapters->isEmpty()) {
+                                return [
+                                    \Filament\Forms\Components\Placeholder::make('no_adapter')
+                                        ->label('')
+                                        ->content(new \Illuminate\Support\HtmlString('
+                                            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg">
+                                                ⚠️ Belum ada LLM provider. Tambah di Settings → Integrasi (BYOK).
+                                            </div>
+                                        ')),
+                                ];
+                            }
+                            return [
+                                \Filament\Forms\Components\Select::make('adapter_config_id')
+                                    ->label('AI Provider')
+                                    ->options($adapters->pluck('name', 'id'))
+                                    ->required()
+                                    ->helperText('Akan dijalankan untuk semua application yang dipilih.'),
+                                \Filament\Forms\Components\TextInput::make('model')
+                                    ->label('Model (opsional)')
+                                    ->placeholder('e.g., gpt-4o-mini, deepseek-chat'),
+                            ];
+                        })
+                        ->action(function (array $data, $records) {
+                            $adapter = \App\Models\AdapterConfig::find($data['adapter_config_id']);
+                            if (!$adapter) return;
+                            $svc = app(\App\Services\AI\CVScreeningService::class);
+                            $success = 0;
+                            $failed = 0;
+                            foreach ($records as $app) {
+                                $result = $svc->screen($app, $adapter, $data['model'] ?? null, auth()->id());
+                                if ($result->status === 'completed') $success++; else $failed++;
+                            }
+                            \Filament\Notifications\Notification::make()
+                                ->title("Bulk AI Screening selesai")
+                                ->body("✅ {$success} success · ❌ {$failed} failed")
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                ]),
             ]);
     }
 }

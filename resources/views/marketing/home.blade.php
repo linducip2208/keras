@@ -66,42 +66,53 @@ $pricing = [
 
 @section('content')
 
-{{-- HERO --}}
-<section class="relative bg-gradient-to-b from-brand-50 via-white to-white overflow-hidden">
-    <div class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,rgba(249,115,22,0.15),transparent_50%)]"></div>
-    <div class="max-w-7xl mx-auto px-6 pt-20 pb-24 text-center">
-        <div class="inline-flex items-center gap-2 bg-brand-100 text-brand-800 px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-            🇮🇩 PPh 21 TER 2024 + BPJS Auto-Update · UU PDP Compliant
+{{-- HERO — Candy Hero --}}
+<section class="relative bg-candy-hero overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="blob blob-pink w-96 h-96 top-10 -left-20 animate-float"></div>
+        <div class="blob blob-purple w-80 h-80 top-32 right-10 animate-float" style="animation-delay: 2s"></div>
+        <div class="blob blob-yellow w-72 h-72 bottom-10 left-1/4 animate-float" style="animation-delay: 4s"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6 pt-20 pb-28 text-center">
+        <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur text-candy-purple-700 px-5 py-2 rounded-full text-sm font-semibold mb-6 shadow-candy">
+            ✨ PPh 21 TER 2024 + BPJS Auto-Update · UU PDP Compliant
         </div>
-        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto leading-tight">
-            HRIS yang <span class="text-brand-600">Karyawanmu Pakai dari WhatsApp</span>.<br class="hidden md:block">
-            Owner Pilih Provider AI Sendiri.
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight max-w-5xl mx-auto leading-[1.05]">
+            HRIS yang <span class="bg-clip-text text-transparent bg-gradient-to-r from-candy-pink-500 via-candy-purple-500 to-brand-500">Karyawanmu Pakai dari WhatsApp</span>.<br class="hidden md:block">
+            <span class="text-gray-900">Owner Pilih Provider AI Sendiri.</span>
         </h1>
-        <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Payroll 5 menit. PPh 21 TER + BPJS otomatis. Clock-in via GPS+selfie atau WA. <strong>BYOK</strong> AI, SMS, bank — kamu kontrol sendiri. License-once self-host tersedia.
+        <p class="mt-8 text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            Payroll 5 menit. PPh 21 TER + BPJS otomatis. Clock-in via GPS+selfie atau WA.
+            <strong class="text-candy-pink-600">BYOK</strong> AI, SMS, bank — kamu kontrol sendiri.
+            License-once self-host tersedia.
         </p>
         <div class="mt-10 flex items-center justify-center gap-4 flex-wrap">
-            <a href="/admin/login" class="bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl text-base font-semibold shadow-lg shadow-brand-500/30">Coba Demo Gratis 14 Hari →</a>
-            <a href="#demo" class="border border-gray-300 hover:border-gray-400 px-8 py-4 rounded-xl text-base font-semibold">Lihat Demo Akun</a>
+            <a href="/admin/login" class="bg-gradient-to-r from-candy-pink-500 via-candy-purple-500 to-brand-500 text-white px-8 py-4 rounded-2xl text-base font-bold shadow-candy-lg hover:shadow-candy-glow transition transform hover:-translate-y-1">
+                ✨ Coba Demo Gratis 14 Hari →
+            </a>
+            <a href="#demo" class="bg-white/80 backdrop-blur hover:bg-white border-2 border-candy-purple-200 hover:border-candy-purple-400 text-candy-purple-700 px-8 py-4 rounded-2xl text-base font-bold transition">
+                👀 Lihat Demo Akun
+            </a>
         </div>
-        <div class="mt-12 flex items-center justify-center gap-8 text-xs text-gray-500 flex-wrap">
-            <div>✓ Tanpa kartu kredit</div>
-            <div>✓ Migrasi data dari Talenta/Gadjian dibantu</div>
-            <div>✓ Server di Indonesia (UU PDP)</div>
+        <div class="mt-14 flex items-center justify-center gap-6 text-sm text-gray-700 flex-wrap">
+            <div class="flex items-center gap-2 bg-white/60 backdrop-blur px-4 py-2 rounded-full"><span class="text-candy-mint-600">✓</span> Tanpa kartu kredit</div>
+            <div class="flex items-center gap-2 bg-white/60 backdrop-blur px-4 py-2 rounded-full"><span class="text-candy-mint-600">✓</span> Migrasi dari Talenta/Gadjian</div>
+            <div class="flex items-center gap-2 bg-white/60 backdrop-blur px-4 py-2 rounded-full"><span class="text-candy-mint-600">✓</span> Server Indonesia 🇮🇩</div>
         </div>
     </div>
 </section>
 
 {{-- TRUST STRIP --}}
-<section class="border-y border-gray-200 bg-white">
-    <div class="max-w-7xl mx-auto px-6 py-12">
-        <p class="text-center text-sm font-medium text-gray-500 mb-8">Cocok untuk berbagai industri:</p>
+<section class="relative bg-white/60 backdrop-blur border-y border-candy-pink-100/50">
+    <div class="max-w-7xl mx-auto px-6 py-14">
+        <p class="text-center text-sm font-semibold text-candy-purple-600 mb-8 uppercase tracking-wider">Cocok untuk berbagai industri</p>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
-            @foreach ($industries as $ind)
-                <div>
-                    <div class="text-4xl mb-2">{{ $ind[0] }}</div>
-                    <div class="font-semibold">{{ $ind[1] }}</div>
-                    <div class="text-xs text-gray-500">{{ $ind[2] }}</div>
+            @php $candyBgs = ['bg-candy-pink-50','bg-candy-purple-50','bg-brand-50','bg-candy-mint-50','bg-candy-yellow-50']; @endphp
+            @foreach ($industries as $i => $ind)
+                <div class="{{ $candyBgs[$i % 5] }} rounded-2xl p-5 hover:scale-105 transition transform shadow-sm hover:shadow-candy">
+                    <div class="text-5xl mb-2">{{ $ind[0] }}</div>
+                    <div class="font-bold text-gray-900">{{ $ind[1] }}</div>
+                    <div class="text-xs text-gray-600 mt-1">{{ $ind[2] }}</div>
                 </div>
             @endforeach
         </div>
@@ -109,22 +120,25 @@ $pricing = [
 </section>
 
 {{-- PROBLEM-SOLUTION --}}
-<section class="bg-gray-50 py-20">
-    <div class="max-w-7xl mx-auto px-6">
+<section class="relative bg-candy-pink py-20 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="blob blob-purple w-96 h-96 top-20 -right-20"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6">
         <div class="text-center mb-14">
-            <h2 class="text-4xl font-bold">Dari Excel-Kacau ke <span class="text-brand-600">Single Source of Truth</span></h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold">Dari <span class="text-candy-pink-500 line-through">Excel-Kacau</span> ke <span class="bg-clip-text text-transparent bg-gradient-to-r from-candy-purple-500 to-brand-500">Single Source of Truth</span></h2>
         </div>
         <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             @foreach ($beforeAfter as $ba)
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                <div class="bg-white/80 backdrop-blur rounded-3xl p-6 shadow-candy border border-white/50 hover:shadow-candy-lg transition">
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <div class="text-xs font-bold text-red-600 mb-2">SEBELUM</div>
-                            <p class="text-sm text-gray-600">{{ $ba[0] }}</p>
+                        <div class="bg-red-50/70 rounded-2xl p-4">
+                            <div class="text-xs font-extrabold text-red-600 mb-2 uppercase tracking-wider">😩 Sebelum</div>
+                            <p class="text-sm text-gray-700">{{ $ba[0] }}</p>
                         </div>
-                        <div>
-                            <div class="text-xs font-bold text-green-600 mb-2">SESUDAH</div>
-                            <p class="text-sm text-gray-900 font-medium">{{ $ba[1] }}</p>
+                        <div class="bg-candy-mint-50 rounded-2xl p-4">
+                            <div class="text-xs font-extrabold text-candy-mint-600 mb-2 uppercase tracking-wider">🎉 Sesudah</div>
+                            <p class="text-sm text-gray-900 font-semibold">{{ $ba[1] }}</p>
                         </div>
                     </div>
                 </div>
@@ -220,23 +234,24 @@ $screenshots = [
 </section>
 
 {{-- COMPACT FEATURES GRID --}}
-<section class="py-24 bg-gray-50">
+<section class="py-24 bg-candy-lavender">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Plus Banyak Fitur Lainnya</h2>
-            <p class="mt-3 text-gray-600">29 modul terhubung dalam satu ekosistem</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Plus Banyak <span class="bg-clip-text text-transparent bg-gradient-to-r from-candy-pink-500 to-candy-purple-500">Fitur Lainnya</span></h2>
+            <p class="mt-3 text-gray-700">29 modul terhubung dalam satu ekosistem</p>
         </div>
+        @php $cardColors = ['from-candy-pink-50 to-candy-pink-100','from-candy-purple-50 to-candy-purple-100','from-brand-50 to-brand-100','from-candy-mint-50 to-candy-mint-100','from-candy-blue-50 to-candy-blue-100','from-candy-yellow-50 to-candy-yellow-100','from-candy-pink-100 to-candy-purple-100','from-brand-100 to-candy-yellow-100','from-candy-mint-100 to-candy-blue-100']; @endphp
         <div class="grid md:grid-cols-3 gap-6">
-            @foreach ($features as $f)
-                <div class="bg-white rounded-2xl p-6 border border-gray-200 hover:border-brand-300 hover:shadow-lg transition group">
-                    <div class="text-4xl mb-4">{{ $f[0] }}</div>
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-brand-600 transition">{{ $f[1] }}</h3>
-                    <p class="text-gray-600 text-sm mb-4">{{ $f[2] }}</p>
+            @foreach ($features as $i => $f)
+                <div class="bg-gradient-to-br {{ $cardColors[$i % count($cardColors)] }} rounded-3xl p-6 hover:shadow-candy-lg hover:-translate-y-1 transition group">
+                    <div class="text-5xl mb-4">{{ $f[0] }}</div>
+                    <h3 class="text-xl font-extrabold mb-2 text-gray-900">{{ $f[1] }}</h3>
+                    <p class="text-gray-700 text-sm mb-4">{{ $f[2] }}</p>
                     <ul class="space-y-2 text-sm">
                         @foreach ($f[3] as $b)
                             <li class="flex items-start gap-2">
-                                <span class="text-green-500 mt-0.5">✓</span>
-                                <span class="text-gray-700">{{ $b }}</span>
+                                <span class="text-candy-mint-600 mt-0.5">✓</span>
+                                <span class="text-gray-800">{{ $b }}</span>
                             </li>
                         @endforeach
                     </ul>
@@ -247,31 +262,35 @@ $screenshots = [
 </section>
 
 {{-- DEMO ACCOUNTS --}}
-<section id="demo" class="bg-gradient-to-br from-gray-900 to-gray-950 text-white py-24">
-    <div class="max-w-6xl mx-auto px-6">
+<section id="demo" class="relative bg-gradient-to-br from-candy-purple-600 via-candy-pink-600 to-brand-600 text-white py-24 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+        <div class="blob blob-yellow w-96 h-96 top-10 -left-20"></div>
+        <div class="blob blob-mint w-96 h-96 bottom-10 -right-20"></div>
+    </div>
+    <div class="relative max-w-6xl mx-auto px-6">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold">Coba Akun Demo Sekarang</h2>
-            <p class="mt-3 text-gray-400">8 role demo siap pakai. Login langsung tanpa daftar.</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold">Coba Akun Demo <span class="text-candy-yellow-200">Sekarang</span></h2>
+            <p class="mt-3 text-white/80 text-lg">8 role demo siap pakai. Login langsung tanpa daftar.</p>
         </div>
-        <div class="overflow-x-auto rounded-2xl border border-gray-700">
+        <div class="overflow-x-auto rounded-3xl bg-white/10 backdrop-blur-xl ring-1 ring-white/20 shadow-candy-lg">
             <table class="w-full text-sm">
-                <thead class="bg-gray-800 text-left">
-                    <tr>
-                        <th class="px-4 py-3">Role</th>
-                        <th class="px-4 py-3">Email</th>
-                        <th class="px-4 py-3">Password</th>
-                        <th class="px-4 py-3">Cakupan</th>
-                        <th class="px-4 py-3"></th>
+                <thead class="bg-white/10 text-left">
+                    <tr class="text-white/90">
+                        <th class="px-4 py-4">Role</th>
+                        <th class="px-4 py-4">Email</th>
+                        <th class="px-4 py-4">Password</th>
+                        <th class="px-4 py-4">Cakupan</th>
+                        <th class="px-4 py-4"></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-800">
+                <tbody class="divide-y divide-white/10">
                     @foreach ($demoAccounts as $acc)
-                        <tr class="hover:bg-gray-800/50">
-                            <td class="px-4 py-3 font-medium">{{ $acc[0] }}</td>
-                            <td class="px-4 py-3 font-mono text-brand-300">{{ $acc[1] }}</td>
-                            <td class="px-4 py-3 font-mono text-gray-400">{{ $acc[2] }}</td>
-                            <td class="px-4 py-3 text-gray-300">{{ $acc[3] }}</td>
-                            <td class="px-4 py-3"><a href="/admin/login" class="text-brand-400 hover:text-brand-300">Login →</a></td>
+                        <tr class="hover:bg-white/10 transition">
+                            <td class="px-4 py-3 font-semibold">{{ $acc[0] }}</td>
+                            <td class="px-4 py-3 font-mono text-candy-yellow-200">{{ $acc[1] }}</td>
+                            <td class="px-4 py-3 font-mono text-white/70">{{ $acc[2] }}</td>
+                            <td class="px-4 py-3 text-white/80">{{ $acc[3] }}</td>
+                            <td class="px-4 py-3"><a href="/admin/login" class="bg-white/20 hover:bg-white text-white hover:text-candy-purple-700 px-3 py-1.5 rounded-lg font-semibold transition">Login →</a></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -281,34 +300,41 @@ $screenshots = [
 </section>
 
 {{-- PRICING --}}
-<section id="pricing" class="py-24">
-    <div class="max-w-7xl mx-auto px-6">
+<section id="pricing" class="relative py-24 bg-candy-sunshine overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="blob blob-peach w-96 h-96 top-20 -left-20"></div>
+        <div class="blob blob-pink w-72 h-72 bottom-20 right-10"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-6">
         <div class="text-center mb-14">
-            <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Harga Transparan, Tanpa Lock-in</h2>
-            <p class="mt-4 text-lg text-gray-600">Per karyawan per bulan. Atau license-once untuk self-host.</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">Harga <span class="bg-clip-text text-transparent bg-gradient-to-r from-candy-pink-500 to-brand-500">Transparan</span>, Tanpa Lock-in</h2>
+            <p class="mt-4 text-lg text-gray-700">Per karyawan per bulan. Atau license-once untuk self-host.</p>
         </div>
+        @php $tierBg = ['bg-candy-pink','bg-candy-mint','bg-candy-lavender','bg-candy-sky']; @endphp
         <div class="grid md:grid-cols-4 gap-6">
-            @foreach ($pricing as $p)
+            @foreach ($pricing as $i => $p)
                 @php $highlighted = $p[5]; @endphp
-                <div class="relative rounded-2xl p-6 border {{ $highlighted ? 'border-brand-500 bg-brand-50 shadow-xl scale-105' : 'border-gray-200 bg-white' }}">
+                <div class="relative rounded-3xl p-6 transition transform hover:-translate-y-2 {{ $highlighted ? 'bg-gradient-to-br from-candy-pink-100 to-candy-purple-100 ring-4 ring-candy-pink-400 shadow-candy-lg scale-105 z-10' : 'bg-white/80 backdrop-blur shadow-candy ring-1 ring-white' }}">
                     @if ($highlighted)
-                        <div class="absolute -top-3 right-6 bg-brand-600 text-white text-xs px-3 py-1 rounded-full font-semibold">RECOMMENDED</div>
+                        <div class="absolute -top-3 right-6 bg-gradient-to-r from-candy-pink-500 via-candy-purple-500 to-brand-500 text-white text-xs px-3 py-1.5 rounded-full font-bold shadow-candy">⭐ RECOMMENDED</div>
                     @endif
-                    <div class="font-bold text-lg">{{ $p[0] }}</div>
-                    <div class="mt-4">
-                        <span class="text-3xl font-extrabold">{{ $p[1] }}</span>
+                    <div class="font-extrabold text-xl text-gray-900">{{ $p[0] }}</div>
+                    <div class="mt-4 flex items-baseline gap-1">
+                        <span class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-candy-pink-500 to-brand-500">{{ $p[1] }}</span>
                         <span class="text-sm text-gray-600">{{ $p[2] }}</span>
                     </div>
-                    <p class="text-sm text-gray-600 mt-2 mb-5">{{ $p[3] }}</p>
+                    <p class="text-sm text-gray-700 mt-2 mb-5">{{ $p[3] }}</p>
                     <ul class="space-y-2 text-sm mb-6">
                         @foreach ($p[4] as $feat)
                             <li class="flex items-start gap-2">
-                                <span class="text-green-500 mt-0.5">✓</span>
-                                <span>{{ $feat }}</span>
+                                <span class="text-candy-mint-600 mt-0.5">✓</span>
+                                <span class="text-gray-800">{{ $feat }}</span>
                             </li>
                         @endforeach
                     </ul>
-                    <a href="/admin/login" class="block w-full text-center py-2.5 rounded-lg font-semibold {{ $highlighted ? 'bg-brand-600 hover:bg-brand-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-900' }}">Pilih {{ $p[0] }}</a>
+                    <a href="/admin/login" class="block w-full text-center py-3 rounded-xl font-bold transition {{ $highlighted ? 'bg-gradient-to-r from-candy-pink-500 via-candy-purple-500 to-brand-500 hover:shadow-candy-glow text-white shadow-candy' : 'bg-white hover:bg-candy-pink-50 text-candy-pink-700 ring-2 ring-candy-pink-200' }}">
+                        Pilih {{ $p[0] }}
+                    </a>
                 </div>
             @endforeach
         </div>
@@ -316,13 +342,24 @@ $screenshots = [
 </section>
 
 {{-- FINAL CTA --}}
-<section class="bg-gradient-to-br from-brand-600 to-brand-800 text-white py-20">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-        <h2 class="text-4xl md:text-5xl font-bold mb-4">Siap Stop Lembur Tiap Akhir Bulan?</h2>
-        <p class="text-lg text-brand-100 mb-8">Coba demo 14 hari gratis. Tanpa kartu kredit. Migrasi data ditanggung tim kami.</p>
+<section class="relative bg-gradient-to-br from-candy-pink-500 via-candy-purple-500 to-brand-500 text-white py-24 overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+        <div class="blob blob-yellow w-96 h-96 -top-20 left-1/4"></div>
+        <div class="blob blob-mint w-96 h-96 -bottom-20 right-1/4"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-6 text-center">
+        <div class="inline-block bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-bold mb-6">
+            ✨ Siap dalam 5 menit
+        </div>
+        <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">Siap Stop Lembur<br>Tiap Akhir Bulan?</h2>
+        <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">Coba demo 14 hari gratis. Tanpa kartu kredit. Migrasi data ditanggung tim kami.</p>
         <div class="flex items-center justify-center gap-4 flex-wrap">
-            <a href="/admin/login" class="bg-white text-brand-700 hover:bg-brand-50 px-8 py-4 rounded-xl font-bold shadow-xl">Mulai Demo Gratis</a>
-            <a href="https://wa.me/6281234567890" class="border-2 border-white/30 hover:bg-white/10 px-8 py-4 rounded-xl font-bold">Konsultasi via WA</a>
+            <a href="/admin/login" class="bg-white text-candy-purple-700 hover:bg-candy-yellow-100 px-10 py-5 rounded-2xl font-extrabold shadow-candy-lg transition transform hover:-translate-y-1 text-lg">
+                🚀 Mulai Demo Gratis
+            </a>
+            <a href="https://wa.me/6281234567890" class="bg-white/20 hover:bg-white/30 backdrop-blur border-2 border-white/40 px-10 py-5 rounded-2xl font-bold transition text-lg">
+                💬 Konsultasi via WA
+            </a>
         </div>
     </div>
 </section>
