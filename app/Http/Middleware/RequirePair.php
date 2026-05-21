@@ -63,6 +63,8 @@ class RequirePair
         if (str_starts_with($path, '/api/')) return true;
         // Public career page (recruitment)
         if (str_starts_with($path, '/karir')) return true;
+        // Public billing payment page (tenant bayar invoice)
+        if (str_starts_with($path, '/billing/')) return true;
 
         // Localhost dev bypass
         if (config('license.dev_bypass') && app()->environment('local')) {

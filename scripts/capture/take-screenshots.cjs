@@ -34,6 +34,7 @@ const SCREENS = [
   ['admin-applications', '/admin/applications', { width: 1440, height: 900 }, 'owner@hris.test'],
   ['career-marketplace', '/karir', { width: 1440, height: 900 }, null],
   ['career-tenant-acme', '/karir/perusahaan/acme', { width: 1440, height: 900 }, null],
+  ['billing-pay', '/billing/pay/INV-2-20957c6a2a52', { width: 1440, height: 900 }, null],
 
   // Mobile viewport landing
   ['landing-mobile-home', '/', { width: 390, height: 844 }, null],

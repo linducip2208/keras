@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Web\BillingController;
 use App\Http\Controllers\Web\CareerController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ProgrammaticSeoController;
@@ -31,6 +32,14 @@ Route::get('/alternatives-to-{competitor}', [ProgrammaticSeoController::class, '
 // Sitemap & robots
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
+
+// Public Billing — Tenant Pay Invoice
+Route::get('/billing/pay/{token}', [BillingController::class, 'pay'])->name('billing.pay');
+Route::post('/billing/pay/{token}', [BillingController::class, 'process'])->name('billing.process')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
+Route::get('/billing/instruction/{token}/{payment}', [BillingController::class, 'instruction'])->name('billing.instruction');
+Route::get('/billing/success/{token}', [BillingController::class, 'success'])->name('billing.success');
+Route::get('/billing/cancel/{token}', [BillingController::class, 'cancel'])->name('billing.cancel');
 
 // Public Career Page (Hybrid: marketplace + per-tenant)
 Route::get('/karir', [CareerController::class, 'index'])->name('career.index'); // marketplace
