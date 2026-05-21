@@ -28,8 +28,16 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('HRIS Indonesia')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Orange,
+            ])
+            ->navigationGroups([
+                'Core HR',
+                'Attendance',
+                'Payroll',
+                'Talent',
+                'Settings',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -38,8 +46,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
+                \App\Filament\Widgets\HrStatsOverview::class,
+                \App\Filament\Widgets\PayrollCostChart::class,
+                \App\Filament\Widgets\HeadcountByDeptChart::class,
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

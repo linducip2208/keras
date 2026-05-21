@@ -18,7 +18,11 @@ class AdapterConfigResource extends Resource
 {
     protected static ?string $model = AdapterConfig::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPuzzlePiece;
+    protected static ?string $navigationLabel = 'Integrasi (BYOK)';
+    protected static ?string $modelLabel = 'Provider Integrasi';
+    protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {

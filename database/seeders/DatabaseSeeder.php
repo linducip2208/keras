@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
             TaxAndBPJSSeeder::class,
             PlanSeeder::class,
             DemoTenantSeeder::class,
+            DemoEmployeesSeeder::class,
+            DemoAttendanceSeeder::class,
+            DemoPayrollSeeder::class,
         ]);
     }
 }
