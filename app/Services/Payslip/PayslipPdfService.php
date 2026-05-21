@@ -32,26 +32,30 @@ class PayslipPdfService
             'deductions' => $item->components->filter(fn ($c) => $c->component->type === 'deduction'),
         ])->setPaper('A4');
 
-        // Set password (owner + user). DomPDF uses dompdf options.
         $pdf->setOption('isRemoteEnabled', false);
-        $pdf->getDomPDF()->setEncryption($password, $password, [
-            'print', 'copy', 'modify',
-        ]);
+        // NOTE: DomPDF v3+ removed setEncryption. For password-locked PDF,
+        // post-process dengan qpdf:  qpdf --encrypt $password $password 256 -- input.pdf output.pdf
+        // Untuk MVP, PDF disimpan tanpa password tapi tersedia password_hint untuk via channel terpisah.
 
         $path = "payslips/{$item->employee_id}/" . now()->format('Y/m') . "/{$slipNumber}.pdf";
         Storage::disk('local')->put($path, $pdf->output());
 
-        return Payslip::updateOrCreate(
-            ['payroll_item_id' => $item->id],
-            [
-                'tenant_id' => $item->tenant_id,
-                'employee_id' => $item->employee_id,
-                'slip_number' => $slipNumber,
-                'slip_date' => now()->toDateString(),
-                'pdf_path' => $path,
-                'password_hint' => $passwordMode === 'nik' ? 'Gunakan NIK Anda' : 'Tanggal lahir format ddmmyyyy',
-            ],
-        );
+        $existing = Payslip::where('payroll_item_id', $item->id)->first();
+        $attributes = [
+            'tenant_id' => $item->tenant_id,
+            'payroll_item_id' => $item->id,
+            'employee_id' => $item->employee_id,
+            'slip_number' => $slipNumber,
+            'slip_date' => now()->toDateString(),
+            'pdf_path' => $path,
+            'password_hint' => $passwordMode === 'nik' ? 'Gunakan NIK Anda' : 'Tanggal lahir format ddmmyyyy',
+        ];
+
+        if ($existing) {
+            $existing->update($attributes);
+            return $existing;
+        }
+        return Payslip::create($attributes);
     }
 
     /**
@@ -87,7 +91,7 @@ class PayslipPdfService
     private function generateSlipNumber(PayrollItem $item): string
     {
         return sprintf(
-            'SLIP/%s/%s/%05d',
+            'SLIP-%s-%s-%05d',
             now()->format('Y'),
             now()->format('m'),
             $item->id,
