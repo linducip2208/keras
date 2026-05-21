@@ -6,25 +6,65 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Candidate;
 use App\Models\JobPosting;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class CareerController extends Controller
 {
+    /**
+     * Marketplace mode — list semua lowongan dari semua tenant aktif.
+     */
     public function index(Request $request)
     {
         $jobs = JobPosting::query()
             ->where('status', 'published')
             ->orderByDesc('published_at')
-            ->with(['department', 'position'])
-            ->limit(50)
+            ->with(['department', 'company', 'position'])
+            ->limit(100)
+            ->get();
+
+        // Group by tenant for "Per Perusahaan" section
+        $companies = Tenant::query()
+            ->whereIn('id', $jobs->pluck('tenant_id')->unique())
+            ->withCount(['companies as job_count' => function ($q) {
+                $q->join('job_postings', 'job_postings.company_id', '=', 'companies.id')
+                  ->where('job_postings.status', 'published');
+            }])
+            ->orderByDesc('job_count')
             ->get();
 
         return view('career.index', [
             'jobs' => $jobs,
-            'title' => 'Karir di HRIS Indonesia — Bergabung dengan Tim Kami',
-            'description' => 'Lihat lowongan kerja terbuka di perusahaan-perusahaan menggunakan HRIS Indonesia. Apply langsung dengan upload CV.',
+            'companies' => $companies,
+            'mode' => 'marketplace',
+            'title' => 'Job Marketplace Indonesia — ' . $jobs->count() . ' Lowongan Kerja Terbuka',
+            'description' => 'Marketplace lowongan kerja Indonesia dari berbagai perusahaan. Apply langsung dengan upload CV, no daftar required. Powered by HRIS Indonesia.',
+        ]);
+    }
+
+    /**
+     * Per-tenant career page — show lowongan dari 1 perusahaan saja.
+     */
+    public function tenant(Request $request, string $slug)
+    {
+        $tenant = Tenant::where('slug', $slug)->where('status', '!=', 'suspended')->firstOrFail();
+
+        $jobs = JobPosting::query()
+            ->where('tenant_id', $tenant->id)
+            ->where('status', 'published')
+            ->orderByDesc('published_at')
+            ->with(['department', 'company', 'position'])
+            ->limit(100)
+            ->get();
+
+        return view('career.index', [
+            'jobs' => $jobs,
+            'companies' => collect(),
+            'tenant' => $tenant,
+            'mode' => 'tenant',
+            'title' => "Karir di {$tenant->name} — " . $jobs->count() . " Lowongan Terbuka",
+            'description' => "Lihat semua lowongan kerja di {$tenant->name}. Apply langsung dengan upload CV.",
         ]);
     }
 

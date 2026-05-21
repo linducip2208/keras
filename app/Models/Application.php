@@ -14,4 +14,5 @@ class Application extends Model
 
     public function candidate() { return $this->belongsTo(Candidate::class); }
     public function jobPosting() { return $this->belongsTo(JobPosting::class); }
+    public function aiScreenings() { return $this->hasMany(AIScreening::class); }
 }

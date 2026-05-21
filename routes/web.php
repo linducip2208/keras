@@ -32,8 +32,10 @@ Route::get('/alternatives-to-{competitor}', [ProgrammaticSeoController::class, '
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
-// Public Career Page
-Route::get('/karir', [CareerController::class, 'index'])->name('career.index');
+// Public Career Page (Hybrid: marketplace + per-tenant)
+Route::get('/karir', [CareerController::class, 'index'])->name('career.index'); // marketplace
+Route::get('/karir/perusahaan/{slug}', [CareerController::class, 'tenant'])->name('career.tenant')
+    ->where('slug', '[a-z0-9-]+'); // per-tenant
 Route::get('/karir/{token}', [CareerController::class, 'show'])->name('career.show')
     ->where('token', '[A-Za-z0-9_-]+');
 Route::post('/karir/{token}/apply', [CareerController::class, 'apply'])->name('career.apply')

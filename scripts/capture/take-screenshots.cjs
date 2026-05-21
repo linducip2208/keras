@@ -31,6 +31,9 @@ const SCREENS = [
   ['admin-payroll-runs', '/admin/payroll-runs', { width: 1440, height: 900 }, 'owner@hris.test'],
   ['admin-attendance-logs', '/admin/attendance-logs', { width: 1440, height: 900 }, 'owner@hris.test'],
   ['admin-leave-requests', '/admin/leave-requests', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-applications', '/admin/applications', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['career-marketplace', '/karir', { width: 1440, height: 900 }, null],
+  ['career-tenant-acme', '/karir/perusahaan/acme', { width: 1440, height: 900 }, null],
 
   // Mobile viewport landing
   ['landing-mobile-home', '/', { width: 390, height: 844 }, null],
