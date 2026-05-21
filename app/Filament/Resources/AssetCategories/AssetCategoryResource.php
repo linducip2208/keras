@@ -20,7 +20,7 @@ class AssetCategoryResource extends Resource
 {
     protected static ?string $model = AssetCategory::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQueueList;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
     protected static ?string $navigationLabel = 'Kategori Aset';
     protected static \UnitEnum|string|null $navigationGroup = 'Settings';
     protected static ?int $navigationSort = 22;

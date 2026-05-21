@@ -18,7 +18,7 @@ class PayrollItemResource extends Resource
 {
     protected static ?string $model = PayrollItem::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedListBullet;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentChartBar;
     protected static ?string $navigationLabel = 'Item Gaji';
     protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
     protected static ?int $navigationSort = 22;

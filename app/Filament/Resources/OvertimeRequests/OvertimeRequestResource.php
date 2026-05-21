@@ -20,7 +20,7 @@ class OvertimeRequestResource extends Resource
 {
     protected static ?string $model = OvertimeRequest::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBolt;
     protected static ?string $navigationLabel = 'Lembur';
     protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
     protected static ?int $navigationSort = 6;

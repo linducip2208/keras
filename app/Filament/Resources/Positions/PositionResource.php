@@ -20,7 +20,7 @@ class PositionResource extends Resource
 {
     protected static ?string $model = Position::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
     protected static ?string $navigationLabel = 'Jabatan';
     protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
     protected static ?int $navigationSort = 5;

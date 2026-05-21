@@ -20,7 +20,7 @@ class HrLetterTemplateResource extends Resource
 {
     protected static ?string $model = HrLetterTemplate::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentDuplicate;
     protected static ?string $navigationLabel = 'Letter Templates';
     protected static \UnitEnum|string|null $navigationGroup = 'Settings';
     protected static ?int $navigationSort = 21;

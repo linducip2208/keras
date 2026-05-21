@@ -18,7 +18,7 @@ class HolidayResource extends Resource
 {
     protected static ?string $model = Holiday::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSun;
     protected static ?string $navigationLabel = 'Hari Libur';
     protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
     protected static ?int $navigationSort = 10;

@@ -20,7 +20,7 @@ class ShiftResource extends Resource
 {
     protected static ?string $model = Shift::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
     protected static ?string $navigationLabel = 'Shift';
     protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
     protected static ?int $navigationSort = 2;

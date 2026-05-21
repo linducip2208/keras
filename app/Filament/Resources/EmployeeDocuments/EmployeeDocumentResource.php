@@ -20,7 +20,7 @@ class EmployeeDocumentResource extends Resource
 {
     protected static ?string $model = EmployeeDocument::class;
 
-        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolderOpen;
     protected static ?string $navigationLabel = 'Dokumen';
     protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
     protected static ?int $navigationSort = 21;

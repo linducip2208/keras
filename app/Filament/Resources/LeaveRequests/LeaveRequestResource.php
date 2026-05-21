@@ -20,7 +20,7 @@ class LeaveRequestResource extends Resource
 {
     protected static ?string $model = LeaveRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
     protected static ?string $navigationLabel = 'Pengajuan Cuti';
     protected static ?string $modelLabel = 'Cuti';
     protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
