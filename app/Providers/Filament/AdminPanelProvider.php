@@ -28,10 +28,17 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('HRIS Indonesia')
+            ->brandName('HRIS Indonesia 🍭')
             ->colors([
-                'primary' => Color::Orange,
+                'primary' => Color::Pink,
+                'secondary' => Color::Purple,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
+                'danger' => Color::Rose,
+                'info' => Color::Sky,
             ])
+            ->font('Plus Jakarta Sans')
+            ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
                 'Core HR',
                 'Attendance',
@@ -47,7 +54,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
+                \App\Filament\Widgets\OperatorMrrWidget::class,
                 \App\Filament\Widgets\HrStatsOverview::class,
+                \App\Filament\Widgets\AiUsageWidget::class,
                 \App\Filament\Widgets\PayrollCostChart::class,
                 \App\Filament\Widgets\HeadcountByDeptChart::class,
                 AccountWidget::class,
