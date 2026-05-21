@@ -9,7 +9,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 
-const BASE_URL = process.env.APP_URL || 'http://127.0.0.1:8000';
+const BASE_URL = process.env.APP_URL || 'http://hris.test';
 const OUT_DIR = path.resolve(__dirname, '../../public/marketing/screenshots');
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -49,12 +49,15 @@ const SCREENS = [
     try {
       if (loginAs) {
         await page.goto(`${BASE_URL}/admin/login`, { waitUntil: 'networkidle', timeout: 60000 });
-        await page.fill('input[type=email]', loginAs);
-        await page.fill('input[type=password]', 'password');
-        await Promise.all([
-          page.waitForURL(/\/admin/, { timeout: 30000 }),
-          page.click('button[type=submit]'),
-        ]);
+        await page.fill('input#form\\.email', loginAs);
+        await page.fill('input#form\\.password', 'password');
+        await page.click('button[type=submit]');
+        try {
+          await page.waitForURL(url => !url.toString().includes('/admin/login'), { timeout: 30000 });
+        } catch (e) {
+          console.warn(`  ! Login navigation timeout, taking current page anyway`);
+        }
+        await page.waitForLoadState('networkidle').catch(() => {});
       }
 
       await page.goto(`${BASE_URL}${urlPath}`, { waitUntil: 'networkidle', timeout: 60000 });
