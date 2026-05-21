@@ -20,7 +20,10 @@ class HrLetterResource extends Resource
 {
     protected static ?string $model = HrLetter::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+    protected static ?string $navigationLabel = 'HR Letters';
+    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema
     {

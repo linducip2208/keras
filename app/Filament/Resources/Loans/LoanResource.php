@@ -20,7 +20,10 @@ class LoanResource extends Resource
 {
     protected static ?string $model = Loan::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
+    protected static ?string $navigationLabel = 'Pinjaman';
+    protected static \UnitEnum|string|null $navigationGroup = 'Operations';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema
     {

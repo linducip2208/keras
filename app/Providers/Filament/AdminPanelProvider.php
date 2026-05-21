@@ -37,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
                 'Attendance',
                 'Payroll',
                 'Talent',
+                'Operations',
                 'Settings',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

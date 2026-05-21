@@ -20,7 +20,10 @@ class ExitRequestResource extends Resource
 {
     protected static ?string $model = ExitRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowRightOnRectangle;
+    protected static ?string $navigationLabel = 'Exit Requests';
+    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema
     {

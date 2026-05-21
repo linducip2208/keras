@@ -61,7 +61,22 @@ class EmployeesTable
                 TrashedFilter::make(),
             ])
             ->defaultSort('full_name')
-            ->recordActions([EditAction::make()])
+            ->recordActions([
+                EditAction::make(),
+                \Filament\Actions\Action::make('download_1721_a1')
+                    ->label('Download 1721-A1')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('info')
+                    ->action(function ($record) {
+                        $path = app(\App\Services\Tax\TaxForm1721A1Service::class)
+                            ->generate($record, now()->year);
+                        \Filament\Notifications\Notification::make()
+                            ->title('Form 1721-A1 generated')
+                            ->body("Saved to: storage/app/private/{$path}")
+                            ->success()
+                            ->send();
+                    }),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

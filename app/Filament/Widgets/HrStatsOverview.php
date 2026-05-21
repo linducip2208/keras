@@ -38,7 +38,7 @@ class HrStatsOverview extends BaseWidget
 
             Stat::make('Kehadiran Hari Ini', "{$attendanceRate}%")
                 ->description("{$todayAttendance} dari {$totalEmployees} karyawan hadir")
-                ->descriptionIcon('heroicon-m-fingerprint')
+                ->descriptionIcon('heroicon-m-check-badge')
                 ->color($attendanceRate >= 90 ? 'success' : ($attendanceRate >= 80 ? 'warning' : 'danger')),
 
             Stat::make('Telat Hari Ini', $lateToday)

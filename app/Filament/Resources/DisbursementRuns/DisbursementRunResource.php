@@ -18,7 +18,10 @@ class DisbursementRunResource extends Resource
 {
     protected static ?string $model = DisbursementRun::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingLibrary;
+    protected static ?string $navigationLabel = 'Disbursement Runs';
+    protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {

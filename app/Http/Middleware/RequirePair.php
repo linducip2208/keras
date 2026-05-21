@@ -61,6 +61,8 @@ class RequirePair
         if (str_starts_with($path, '/webhook/')) return true;
         // API endpoints (mobile) — auth via Sanctum, no license gate
         if (str_starts_with($path, '/api/')) return true;
+        // Public career page (recruitment)
+        if (str_starts_with($path, '/karir')) return true;
 
         // Localhost dev bypass
         if (config('license.dev_bypass') && app()->environment('local')) {

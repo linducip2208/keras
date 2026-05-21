@@ -13,6 +13,7 @@ class JobPosting extends Model
     protected $casts = ['external_links'=>'array','published_at'=>'datetime','closed_at'=>'datetime','salary_min'=>'decimal:2','salary_max'=>'decimal:2'];
 
     public function applications() { return $this->hasMany(Application::class); }
+    public function company() { return $this->belongsTo(Company::class); }
     public function department() { return $this->belongsTo(Department::class); }
     public function position() { return $this->belongsTo(Position::class); }
 }

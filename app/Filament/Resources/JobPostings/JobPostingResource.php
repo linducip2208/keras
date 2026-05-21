@@ -20,7 +20,10 @@ class JobPostingResource extends Resource
 {
     protected static ?string $model = JobPosting::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
+    protected static ?string $navigationLabel = 'Lowongan';
+    protected static \UnitEnum|string|null $navigationGroup = 'Talent';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {

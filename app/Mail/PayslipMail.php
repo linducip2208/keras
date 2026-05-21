@@ -11,11 +11,14 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 
-class PayslipMail extends Mailable
+class PayslipMail extends Mailable implements \Illuminate\Contracts\Queue\ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Payslip $payslip) {}
+    public function __construct(public Payslip $payslip)
+    {
+        $this->onQueue('mail');
+    }
 
     public function envelope(): Envelope
     {

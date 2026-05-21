@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Web\CareerController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ProgrammaticSeoController;
 use App\Http\Controllers\Web\SitemapController;
@@ -30,6 +31,13 @@ Route::get('/alternatives-to-{competitor}', [ProgrammaticSeoController::class, '
 // Sitemap & robots
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
+
+// Public Career Page
+Route::get('/karir', [CareerController::class, 'index'])->name('career.index');
+Route::get('/karir/{token}', [CareerController::class, 'show'])->name('career.show')
+    ->where('token', '[A-Za-z0-9_-]+');
+Route::post('/karir/{token}/apply', [CareerController::class, 'apply'])->name('career.apply')
+    ->where('token', '[A-Za-z0-9_-]+');
 
 // Payment webhooks (inbound from gateways) — no CSRF
 Route::post('/webhook/payment/{adapterConfig}', [PaymentWebhookController::class, 'handle'])
