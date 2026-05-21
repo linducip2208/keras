@@ -22,7 +22,7 @@ class AnnouncementResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
     protected static ?string $navigationLabel = 'Pengumuman';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 7;
 
     public static function form(Schema $schema): Schema

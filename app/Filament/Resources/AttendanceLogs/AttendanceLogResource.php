@@ -20,7 +20,7 @@ class AttendanceLogResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
     protected static ?string $navigationLabel = 'Attendance Logs';
-    protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
+    protected static \UnitEnum|string|null $navigationGroup = '📅  Attendance';
     protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema

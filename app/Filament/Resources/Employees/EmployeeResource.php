@@ -25,7 +25,7 @@ class EmployeeResource extends Resource
     protected static ?string $navigationLabel = 'Karyawan';
     protected static ?string $modelLabel = 'Karyawan';
     protected static ?string $pluralModelLabel = 'Karyawan';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 1;
     protected static ?string $recordTitleAttribute = 'full_name';
 

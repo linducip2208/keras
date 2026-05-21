@@ -23,7 +23,7 @@ class LeaveRequestResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
     protected static ?string $navigationLabel = 'Pengajuan Cuti';
     protected static ?string $modelLabel = 'Cuti';
-    protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
+    protected static \UnitEnum|string|null $navigationGroup = '📅  Attendance';
     protected static ?int $navigationSort = 3;
 
     public static function getNavigationBadge(): ?string

@@ -20,7 +20,7 @@ class EmployeeBankAccountResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
     protected static ?string $navigationLabel = 'Rekening Bank';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema

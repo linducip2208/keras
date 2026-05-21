@@ -22,7 +22,7 @@ class HrLetterTemplateResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentDuplicate;
     protected static ?string $navigationLabel = 'Letter Templates';
-    protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+    protected static \UnitEnum|string|null $navigationGroup = '🔧  Settings';
     protected static ?int $navigationSort = 21;
 
     public static function form(Schema $schema): Schema

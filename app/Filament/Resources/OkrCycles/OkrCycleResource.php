@@ -22,7 +22,7 @@ class OkrCycleResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRocketLaunch;
     protected static ?string $navigationLabel = 'OKR Cycles';
-    protected static \UnitEnum|string|null $navigationGroup = 'Talent';
+    protected static \UnitEnum|string|null $navigationGroup = '🚀  Talent';
     protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema

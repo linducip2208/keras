@@ -24,22 +24,37 @@ class IdentifyTenant
 
     private function resolveTenant(Request $request): ?Tenant
     {
-        $headerTenant = $request->header('X-Tenant-ID');
-        if ($headerTenant) {
-            return Tenant::where('slug', $headerTenant)
-                ->orWhere('id', $headerTenant)
-                ->first();
+        try {
+            $headerTenant = $request->header('X-Tenant-ID');
+            if ($headerTenant) {
+                return Tenant::where('slug', $headerTenant)
+                    ->orWhere('id', $headerTenant)
+                    ->first();
+            }
+
+            $host = $request->getHost();
+            $baseDomain = config('app.base_domain', 'hris.test');
+
+            // hris.test (root) → default tenant
+            if ($host === $baseDomain) {
+                return Tenant::where('slug', 'acme')->first()
+                    ?? Tenant::where('subdomain', 'default')->first();
+            }
+
+            // {subdomain}.hris.test
+            if (str_ends_with($host, '.' . $baseDomain)) {
+                $subdomain = str_replace('.' . $baseDomain, '', $host);
+                return Tenant::where('subdomain', $subdomain)->first()
+                    ?? Tenant::where('slug', 'acme')->first();
+            }
+
+            // Custom domain
+            return Tenant::where('custom_domain', $host)->first()
+                ?? Tenant::where('slug', 'acme')->first();
+        } catch (\Throwable $e) {
+            // DB unavailable / wrong connection — fail gracefully, jangan break aplikasi
+            \Log::warning('IdentifyTenant resolve failed: ' . $e->getMessage());
+            return null;
         }
-
-        $host = $request->getHost();
-        $baseDomain = config('app.base_domain', 'hris.test');
-
-        if (str_ends_with($host, '.' . $baseDomain)) {
-            $subdomain = str_replace('.' . $baseDomain, '', $host);
-            return Tenant::where('subdomain', $subdomain)->first();
-        }
-
-        return Tenant::where('custom_domain', $host)->first()
-            ?? Tenant::where('subdomain', 'default')->first();
     }
 }

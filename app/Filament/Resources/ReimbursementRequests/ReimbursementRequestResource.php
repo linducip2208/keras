@@ -22,7 +22,7 @@ class ReimbursementRequestResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedReceiptPercent;
     protected static ?string $navigationLabel = 'Reimbursement';
-    protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
+    protected static \UnitEnum|string|null $navigationGroup = '💰  Payroll';
     protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema

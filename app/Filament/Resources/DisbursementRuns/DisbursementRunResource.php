@@ -20,7 +20,7 @@ class DisbursementRunResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowsRightLeft;
     protected static ?string $navigationLabel = 'Disbursement Runs';
-    protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
+    protected static \UnitEnum|string|null $navigationGroup = '💰  Payroll';
     protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema

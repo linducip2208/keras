@@ -22,7 +22,7 @@ class BranchResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
     protected static ?string $navigationLabel = 'Cabang';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema

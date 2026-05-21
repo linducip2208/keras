@@ -20,7 +20,7 @@ class InvoiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
     protected static ?string $navigationLabel = 'Invoices';
-    protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+    protected static \UnitEnum|string|null $navigationGroup = '🔧  Settings';
     protected static ?int $navigationSort = 12;
 
     public static function form(Schema $schema): Schema

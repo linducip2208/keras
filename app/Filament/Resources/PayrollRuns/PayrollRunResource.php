@@ -22,7 +22,7 @@ class PayrollRunResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
     protected static ?string $navigationLabel = 'Payroll Runs';
-    protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
+    protected static \UnitEnum|string|null $navigationGroup = '💰  Payroll';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema

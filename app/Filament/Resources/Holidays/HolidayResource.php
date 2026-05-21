@@ -20,7 +20,7 @@ class HolidayResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSun;
     protected static ?string $navigationLabel = 'Hari Libur';
-    protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
+    protected static \UnitEnum|string|null $navigationGroup = '📅  Attendance';
     protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema

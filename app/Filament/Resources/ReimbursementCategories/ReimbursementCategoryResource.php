@@ -22,7 +22,7 @@ class ReimbursementCategoryResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
     protected static ?string $navigationLabel = 'Kategori Reimburse';
-    protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+    protected static \UnitEnum|string|null $navigationGroup = '🔧  Settings';
     protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema

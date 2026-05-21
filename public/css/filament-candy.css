@@ -1,0 +1,73 @@
+/* Force submenu icons to display even when nav group has icon */
+.fi-sidebar-nav-groups .fi-sidebar-item-icon,
+.fi-sidebar-item .fi-sidebar-item-icon {
+    display: inline-flex !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    opacity: 0.85;
+}
+
+/* Hide the bullet dots that Filament 4 puts before submenu items */
+.fi-sidebar-group-items > li::before,
+.fi-sidebar-item::before {
+    display: none !important;
+}
+
+/* Indent sub-items so they don't look flush with group */
+.fi-sidebar-group-items {
+    padding-left: 0 !important;
+}
+
+.fi-sidebar-group-items .fi-sidebar-item-button {
+    padding-left: 1.5rem !important;
+}
+
+/* Active item highlight more vibrant */
+.fi-sidebar-item-active .fi-sidebar-item-button {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(168, 85, 247, 0.1)) !important;
+    color: rgb(219, 39, 119) !important;
+}
+
+.fi-sidebar-item-active .fi-sidebar-item-icon {
+    color: rgb(219, 39, 119) !important;
+}
+
+/* Nav group label uppercase + tracking + emoji font fallback */
+.fi-sidebar-group-label {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    color: rgb(107, 114, 128) !important;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif !important;
+}
+
+/* Global emoji font fallback */
+body, html, .fi-body {
+    font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif !important;
+}
+
+/* Sidebar item hover slide */
+.fi-sidebar-item-button {
+    transition: all 0.15s ease;
+}
+.fi-sidebar-item-button:hover {
+    transform: translateX(2px);
+    background: rgba(252, 231, 243, 0.5) !important;
+}
+
+/* Card border-radius softer */
+.fi-section, .fi-card {
+    border-radius: 14px !important;
+}
+
+/* Stat widget value bigger + bolder */
+.fi-wi-stats-overview-stat-value {
+    font-weight: 800 !important;
+}
+
+/* Topbar glass effect */
+.fi-topbar {
+    backdrop-filter: blur(12px) saturate(180%);
+    background: rgba(255, 255, 255, 0.8) !important;
+}

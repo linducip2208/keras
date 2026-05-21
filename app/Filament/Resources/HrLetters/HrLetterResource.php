@@ -22,7 +22,7 @@ class HrLetterResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
     protected static ?string $navigationLabel = 'HR Letters';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema

@@ -22,7 +22,7 @@ class DepartmentResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
     protected static ?string $navigationLabel = 'Departemen';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema

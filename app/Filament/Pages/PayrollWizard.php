@@ -24,7 +24,7 @@ class PayrollWizard extends Page
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
     protected static ?string $navigationLabel = 'Run Payroll';
     protected static ?string $title = 'Payroll Wizard';
-    protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
+    protected static \UnitEnum|string|null $navigationGroup = '💰  Payroll';
     protected static ?int $navigationSort = 1;
 
     protected string $view = 'filament.pages.payroll-wizard';

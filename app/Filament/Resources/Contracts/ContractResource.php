@@ -22,7 +22,7 @@ class ContractResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
     protected static ?string $navigationLabel = 'Kontrak';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 8;
 
     public static function form(Schema $schema): Schema

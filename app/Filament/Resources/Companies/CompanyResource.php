@@ -22,7 +22,7 @@ class CompanyResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
     protected static ?string $navigationLabel = 'Perusahaan';
-    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static \UnitEnum|string|null $navigationGroup = '👥  Core HR';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema

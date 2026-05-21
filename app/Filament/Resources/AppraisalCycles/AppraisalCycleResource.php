@@ -22,7 +22,7 @@ class AppraisalCycleResource extends Resource
 
         protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
     protected static ?string $navigationLabel = 'Appraisal Cycles';
-    protected static \UnitEnum|string|null $navigationGroup = 'Talent';
+    protected static \UnitEnum|string|null $navigationGroup = '🚀  Talent';
     protected static ?int $navigationSort = 12;
 
     public static function form(Schema $schema): Schema
