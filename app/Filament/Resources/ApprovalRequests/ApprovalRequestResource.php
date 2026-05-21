@@ -18,7 +18,20 @@ class ApprovalRequestResource extends Resource
 {
     protected static ?string $model = ApprovalRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInbox;
+    protected static ?string $navigationLabel = 'Approval Inbox';
+    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static ?int $navigationSort = 5;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::where('status', 'pending')->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::where('status', 'pending')->count() > 0 ? 'warning' : null;
+    }
 
     public static function form(Schema $schema): Schema
     {

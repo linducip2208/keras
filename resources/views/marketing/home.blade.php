@@ -133,12 +133,98 @@ $pricing = [
     </div>
 </section>
 
-{{-- FEATURES --}}
-<section id="features" class="py-24">
+{{-- SCREENSHOT SHOWCASE — Alternating Real Screenshots --}}
+@php
+$screenshots = [
+    [
+        'image' => 'admin-payroll-runs.png',
+        'title' => 'Payroll PPh 21 TER 2024 — Hitung 25 Karyawan dalam 30 Detik',
+        'description' => 'Engine payroll lengkap dengan PMK 168/2023. Gross, Net, PPh 21, BPJS 5 program — semua terhitung otomatis dalam satu run. Audit-ready dengan calculation breakdown per komponen.',
+        'bullets' => ['PPh 21 TER 2024 (kategori A/B/C lengkap)', 'BPJS 5 program dengan cap upah 2026', 'Gross / Nett / Gross-up methods', 'Bulk approve + generate slip PDF', 'Background queue untuk 500+ karyawan'],
+        'reversed' => false,
+    ],
+    [
+        'image' => 'admin-employees.png',
+        'title' => 'Employee Database Indonesia-First',
+        'description' => 'Master data lengkap dengan NIK 16-digit encrypted, NPWP, PTKP status (TK/0 sampai K/3), keluarga (BPJS dependent + PTKP dependent), bank account split, dokumen, expiry alert.',
+        'bullets' => ['Custom field per perusahaan', 'Bulk import Excel + validation', 'QR code badge ID auto-generate', 'PII access logged (UU PDP compliance)', 'Multi-cabang dengan UMK per kota'],
+        'reversed' => true,
+    ],
+    [
+        'image' => 'admin-attendance-logs.png',
+        'title' => 'Attendance Anti-Cheat dengan Mock GPS Detection',
+        'description' => 'GPS + selfie + face recognition. Setiap attendance log dengan koordinat lat/long, foto selfie, dan flag 🚨 untuk mock GPS suspect. Live tracking dashboard untuk HRD monitoring real-time.',
+        'bullets' => ['Geofence radius per cabang', 'Mock GPS detection (fake location)', 'Offline mode + auto-sync', 'Multi-method: GPS / Fingerprint / Face / QR', 'WhatsApp clock-in via share location'],
+        'reversed' => false,
+    ],
+    [
+        'image' => 'admin-leave-requests.png',
+        'title' => 'Approval Workflow yang Manager Beneran Pakai',
+        'description' => 'Inline action button "Setujui" / "Tolak" langsung di tabel — tidak perlu buka detail. Auto-update leave balance, notif ke karyawan. Multi-level approval dengan auto-escalation jika manager cuti.',
+        'bullets' => ['Inline approve/reject buttons', 'Multi-level conditional routing', 'Auto-escalation timeout', 'Approval via WhatsApp reply "OK 1"', 'Audit trail per step'],
+        'reversed' => true,
+    ],
+    [
+        'image' => 'admin-dashboard.png',
+        'title' => 'Dashboard Executive dengan AI-Ready Insight',
+        'description' => 'Real-time stats: headcount aktif, kehadiran hari ini, telat alert, mock GPS warning, pending approval, payroll cost. Plus tren payroll 6 bulan & distribusi headcount per departemen.',
+        'bullets' => ['6 stat cards dengan color-coded warning', 'Tren payroll line chart 6 bulan', 'Distribusi headcount per dept (doughnut)', 'AI narrative insight monthly (Phase 5)', 'Predictive turnover risk per karyawan'],
+        'reversed' => false,
+    ],
+    [
+        'image' => 'landing-pair-wizard.png',
+        'title' => 'License-Once Self-host — Beli Sekali Pakai Selamanya',
+        'description' => 'Drop-in license v3 dari whitelabel.co.id dengan RSA signing + AES-256 encrypted lock file. Self-host di server Anda sendiri, data 100% milik Anda, tanpa per-user fee bulanan.',
+        'bullets' => ['Source code dilindungi license v3', 'Pairing wizard di /__pair', 'Data residency Indonesia (UU PDP)', 'Annual maintenance 20% (opsional)', 'Atau pilih SaaS Rp 10-25k/user/bulan'],
+        'reversed' => true,
+    ],
+];
+@endphp
+
+<section id="features" class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
             <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Semua yang Kamu Butuhkan, dalam Satu Sistem</h2>
             <p class="mt-4 text-lg text-gray-600">29 modul, 300+ fitur. Compliance Indonesia first-class.</p>
+        </div>
+
+        <div class="space-y-24">
+            @foreach ($screenshots as $s)
+                <div class="grid md:grid-cols-2 gap-12 items-center {{ $s['reversed'] ? 'md:[direction:rtl]' : '' }}">
+                    <div class="{{ $s['reversed'] ? 'md:[direction:ltr]' : '' }}">
+                        <div class="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-gray-200 bg-gray-50">
+                            <img src="{{ asset('marketing/screenshots/' . $s['image']) }}"
+                                 alt="{{ $s['title'] }}"
+                                 loading="lazy"
+                                 class="w-full h-auto" />
+                        </div>
+                    </div>
+                    <div class="{{ $s['reversed'] ? 'md:[direction:ltr]' : '' }}">
+                        <h3 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight">{{ $s['title'] }}</h3>
+                        <p class="mt-4 text-lg text-gray-600 leading-relaxed">{{ $s['description'] }}</p>
+                        <ul class="mt-6 space-y-3">
+                            @foreach ($s['bullets'] as $b)
+                                <li class="flex items-start gap-3">
+                                    <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M16.7 5.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-3-3a1 1 0 011.4-1.4l2.3 2.3 6.3-6.3a1 1 0 011.4 0z"/>
+                                    </svg>
+                                    <span class="text-gray-700">{{ $b }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- COMPACT FEATURES GRID --}}
+<section class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Plus Banyak Fitur Lainnya</h2>
+            <p class="mt-3 text-gray-600">29 modul terhubung dalam satu ekosistem</p>
         </div>
         <div class="grid md:grid-cols-3 gap-6">
             @foreach ($features as $f)

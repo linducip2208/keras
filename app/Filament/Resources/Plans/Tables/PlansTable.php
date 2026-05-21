@@ -15,47 +15,22 @@ class PlansTable
     {
         return $table
             ->columns([
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('description')
-                    ->searchable(),
-                TextColumn::make('max_employees')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('price_monthly')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('price_annual')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('currency')
-                    ->searchable(),
-                IconColumn::make('is_active')
-                    ->boolean(),
-                TextColumn::make('display_order')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('display_order')->label('#')->sortable(),
+                TextColumn::make('name')->label('Plan')->searchable()
+                    ->description(fn ($record) => $record->description),
+                TextColumn::make('max_employees')->label('Max Karyawan')
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 0, ',', '.') : 'Unlimited'),
+                TextColumn::make('price_monthly')->label('Harga / Bulan')->money('IDR')->sortable()
+                    ->description(fn ($record) => 'per karyawan'),
+                TextColumn::make('price_annual')->label('Harga / Tahun')->money('IDR')->sortable()
+                    ->description('save 15%')
+                    ->toggleable(),
+                IconColumn::make('is_active')->label('Aktif')->boolean(),
+                TextColumn::make('subscriptions_count')->label('Subscribers')
+                    ->counts('subscriptions')->toggleable(),
             ])
-            ->filters([
-                //
-            ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->defaultSort('display_order')
+            ->recordActions([EditAction::make()])
+            ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 }
