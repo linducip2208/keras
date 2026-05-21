@@ -18,7 +18,10 @@ class EmployeeFamilyResource extends Resource
 {
     protected static ?string $model = EmployeeFamily::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
+    protected static ?string $navigationLabel = 'Keluarga';
+    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static ?int $navigationSort = 22;
 
     public static function form(Schema $schema): Schema
     {

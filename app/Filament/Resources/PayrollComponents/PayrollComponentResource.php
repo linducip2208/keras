@@ -20,7 +20,10 @@ class PayrollComponentResource extends Resource
 {
     protected static ?string $model = PayrollComponent::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationLabel = 'Komponen Gaji';
+    protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
+    protected static ?int $navigationSort = 20;
 
     public static function form(Schema $schema): Schema
     {

@@ -18,7 +18,10 @@ class PayslipResource extends Resource
 {
     protected static ?string $model = Payslip::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentArrowDown;
+    protected static ?string $navigationLabel = 'Slip Gaji';
+    protected static \UnitEnum|string|null $navigationGroup = 'Payroll';
+    protected static ?int $navigationSort = 23;
 
     public static function form(Schema $schema): Schema
     {

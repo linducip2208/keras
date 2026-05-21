@@ -20,7 +20,10 @@ class BranchResource extends Resource
 {
     protected static ?string $model = Branch::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
+    protected static ?string $navigationLabel = 'Cabang';
+    protected static \UnitEnum|string|null $navigationGroup = 'Core HR';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {

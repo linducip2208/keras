@@ -18,7 +18,10 @@ class LeaveBalanceResource extends Resource
 {
     protected static ?string $model = LeaveBalance::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+        protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedScale;
+    protected static ?string $navigationLabel = 'Saldo Cuti';
+    protected static \UnitEnum|string|null $navigationGroup = 'Attendance';
+    protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema
     {
