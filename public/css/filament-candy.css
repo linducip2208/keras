@@ -1,73 +1,280 @@
-/* Force submenu icons to display even when nav group has icon */
+/* ═══════════════════════════════════════════════════════════════
+   🍭 HRIS Indonesia — Candy Theme for Filament Admin
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Global emoji font fallback */
+body, html, .fi-body, .fi-sidebar {
+    font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif !important;
+}
+
+/* ─── Sidebar background gradient ─────────────────────────── */
+.fi-sidebar {
+    background: linear-gradient(180deg, #fef7fa 0%, #fdf2f8 50%, #faf5ff 100%) !important;
+    border-right: 1px solid rgba(236, 72, 153, 0.1) !important;
+}
+
+/* ─── Brand header (logo top) ─────────────────────────────── */
+.fi-sidebar-header {
+    background: linear-gradient(135deg, #fdf2f8 0%, #faf5ff 50%, #fff7ed 100%) !important;
+    border-bottom: 1px solid rgba(236, 72, 153, 0.15) !important;
+    padding: 1.25rem 1rem !important;
+}
+
+.fi-sidebar-header .fi-logo {
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #ec4899, #a855f7, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ─── Group Header — PRETTY PILL BADGE ─────────────────────── */
+.fi-sidebar-group-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.7rem !important;
+    font-weight: 800 !important;
+    padding: 9px 14px !important;
+    margin: 14px 10px 6px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 12px -3px rgba(236, 72, 153, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif !important;
+}
+
+/* Decorative shine line on top */
+.fi-sidebar-group-label::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+}
+
+/* ─── Per-group color theme (nth-child rotating candy palette) ───── */
+/* 1st group: Pink (Core HR) */
+.fi-sidebar-nav-groups > div:nth-child(1) .fi-sidebar-group-label,
+.fi-sidebar-nav > div:nth-child(1) .fi-sidebar-group-label {
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%) !important;
+    color: #be185d !important;
+    border: 1px solid rgba(236, 72, 153, 0.25);
+}
+
+/* 2nd group: Blue/Sky (Attendance) */
+.fi-sidebar-nav-groups > div:nth-child(2) .fi-sidebar-group-label,
+.fi-sidebar-nav > div:nth-child(2) .fi-sidebar-group-label {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    color: #1d4ed8 !important;
+    border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+/* 3rd group: Mint/Emerald (Payroll) */
+.fi-sidebar-nav-groups > div:nth-child(3) .fi-sidebar-group-label,
+.fi-sidebar-nav > div:nth-child(3) .fi-sidebar-group-label {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+    color: #047857 !important;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+/* 4th group: Yellow/Cream (Talent) */
+.fi-sidebar-nav-groups > div:nth-child(4) .fi-sidebar-group-label,
+.fi-sidebar-nav > div:nth-child(4) .fi-sidebar-group-label {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    color: #b45309 !important;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+/* 5th group: Purple (Operations) */
+.fi-sidebar-nav-groups > div:nth-child(5) .fi-sidebar-group-label,
+.fi-sidebar-nav > div:nth-child(5) .fi-sidebar-group-label {
+    background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%) !important;
+    color: #6d28d9 !important;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+/* 6th group: Peach (Settings) */
+.fi-sidebar-nav-groups > div:nth-child(6) .fi-sidebar-group-label,
+.fi-sidebar-nav > div:nth-child(6) .fi-sidebar-group-label {
+    background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%) !important;
+    color: #9a3412 !important;
+    border: 1px solid rgba(249, 115, 22, 0.25);
+}
+
+/* ─── Group collapsible chevron — match group color ──────────── */
+.fi-sidebar-group-collapse-button {
+    background: rgba(255,255,255,0.6) !important;
+    border-radius: 8px !important;
+}
+
+/* ─── Submenu items ───────────────────────────────────────── */
+.fi-sidebar-group-items {
+    padding-left: 0 !important;
+    margin-top: 4px !important;
+}
+
+.fi-sidebar-group-items .fi-sidebar-item-button {
+    padding-left: 1.5rem !important;
+    border-radius: 10px !important;
+    margin: 2px 8px !important;
+    font-weight: 500 !important;
+}
+
+/* Sub-item icons visible */
 .fi-sidebar-nav-groups .fi-sidebar-item-icon,
 .fi-sidebar-item .fi-sidebar-item-icon {
     display: inline-flex !important;
-    width: 1.25rem !important;
-    height: 1.25rem !important;
-    opacity: 0.85;
+    width: 1.15rem !important;
+    height: 1.15rem !important;
+    opacity: 0.7;
+    transition: all 0.2s ease;
 }
 
-/* Hide the bullet dots that Filament 4 puts before submenu items */
+/* Hide bullet dots Filament adds */
 .fi-sidebar-group-items > li::before,
 .fi-sidebar-item::before {
     display: none !important;
 }
 
-/* Indent sub-items so they don't look flush with group */
-.fi-sidebar-group-items {
-    padding-left: 0 !important;
+/* ─── Hover state — sliding candy bar ────────────────────── */
+.fi-sidebar-item-button {
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.fi-sidebar-group-items .fi-sidebar-item-button {
-    padding-left: 1.5rem !important;
+.fi-sidebar-item-button:hover {
+    transform: translateX(3px);
+    background: linear-gradient(90deg, rgba(252, 231, 243, 0.6) 0%, rgba(243, 232, 255, 0.4) 100%) !important;
 }
 
-/* Active item highlight more vibrant */
-.fi-sidebar-item-active .fi-sidebar-item-button {
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(168, 85, 247, 0.1)) !important;
-    color: rgb(219, 39, 119) !important;
+.fi-sidebar-item-button:hover .fi-sidebar-item-icon {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* ─── Active item — vibrant pink gradient ─────────────────── */
+.fi-sidebar-item-active > .fi-sidebar-item-button {
+    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 60%, #f9a8d4 100%) !important;
+    color: #be185d !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px -3px rgba(236, 72, 153, 0.4) !important;
+    transform: translateX(2px);
 }
 
 .fi-sidebar-item-active .fi-sidebar-item-icon {
-    color: rgb(219, 39, 119) !important;
+    color: #be185d !important;
+    opacity: 1 !important;
 }
 
-/* Nav group label uppercase + tracking + emoji font fallback */
-.fi-sidebar-group-label {
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 0.72rem !important;
-    font-weight: 700 !important;
-    color: rgb(107, 114, 128) !important;
-    font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif !important;
+/* Active indicator bar on left */
+.fi-sidebar-item-active > .fi-sidebar-item-button::before {
+    content: '' !important;
+    display: block !important;
+    position: absolute;
+    left: -2px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: linear-gradient(180deg, #ec4899, #a855f7);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 8px rgba(236, 72, 153, 0.5);
 }
 
-/* Global emoji font fallback */
-body, html, .fi-body {
-    font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif !important;
+/* ─── Topbar — Glass effect ───────────────────────────────── */
+.fi-topbar {
+    backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-bottom: 1px solid rgba(236, 72, 153, 0.1) !important;
 }
 
-/* Sidebar item hover slide */
-.fi-sidebar-item-button {
-    transition: all 0.15s ease;
-}
-.fi-sidebar-item-button:hover {
-    transform: translateX(2px);
-    background: rgba(252, 231, 243, 0.5) !important;
+/* ─── Main content — Soft background ──────────────────────── */
+.fi-main {
+    background: linear-gradient(180deg, #fefcfb 0%, #fdf2f8 100%) !important;
 }
 
-/* Card border-radius softer */
+/* ─── Cards / sections ────────────────────────────────────── */
 .fi-section, .fi-card {
-    border-radius: 14px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(236, 72, 153, 0.08) !important;
+    box-shadow: 0 4px 20px -4px rgba(236, 72, 153, 0.06) !important;
 }
 
-/* Stat widget value bigger + bolder */
+/* ─── Stat widget value — bigger + gradient text ──────────── */
 .fi-wi-stats-overview-stat-value {
     font-weight: 800 !important;
+    font-size: 2rem !important;
+    background: linear-gradient(135deg, #ec4899, #a855f7, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-/* Topbar glass effect */
-.fi-topbar {
-    backdrop-filter: blur(12px) saturate(180%);
-    background: rgba(255, 255, 255, 0.8) !important;
+.fi-wi-stats-overview-stat {
+    border-radius: 16px !important;
+    transition: all 0.2s ease;
+}
+
+.fi-wi-stats-overview-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px -6px rgba(236, 72, 153, 0.15) !important;
+}
+
+/* ─── Badges — softer pills ───────────────────────────────── */
+.fi-badge {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+}
+
+/* ─── Buttons — gradient candy primary ────────────────────── */
+.fi-btn.fi-color-primary,
+button[type="submit"] {
+    background: linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #f97316 100%) !important;
+    box-shadow: 0 4px 16px -4px rgba(236, 72, 153, 0.4) !important;
+    transition: all 0.2s ease !important;
+}
+
+.fi-btn.fi-color-primary:hover,
+button[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px -4px rgba(236, 72, 153, 0.5) !important;
+}
+
+/* ─── Tables ──────────────────────────────────────────────── */
+.fi-ta-header-cell {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    background: linear-gradient(180deg, #fdf2f8 0%, #fef7fa 100%) !important;
+}
+
+.fi-ta-row:hover {
+    background: rgba(252, 231, 243, 0.3) !important;
+}
+
+/* ─── Scrollbar candy ─────────────────────────────────────── */
+.fi-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.fi-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.fi-sidebar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #f9a8d4, #d8b4fe);
+    border-radius: 4px;
+}
+
+/* ─── Print mode (clean for PDF) ──────────────────────────── */
+@media print {
+    .fi-sidebar, .fi-topbar { display: none !important; }
+    .fi-main { background: white !important; }
+}
+
+/* ─── Reduced motion accessibility ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
 }
