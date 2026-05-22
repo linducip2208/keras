@@ -102,6 +102,7 @@
             </a>
             <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-700">
                 <a href="/#features" class="hover:text-candy-pink-600 transition">Fitur</a>
+                <a href="/#tour" class="hover:text-candy-pink-600 transition">Tour 📸</a>
                 <a href="/#pricing" class="hover:text-candy-pink-600 transition">Harga</a>
                 <a href="/#demo" class="hover:text-candy-pink-600 transition">Demo</a>
                 <a href="/karir" class="hover:text-candy-pink-600 transition flex items-center gap-1">

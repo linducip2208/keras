@@ -35,6 +35,15 @@ const SCREENS = [
   ['career-marketplace', '/karir', { width: 1440, height: 900 }, null],
   ['career-tenant-acme', '/karir/perusahaan/acme', { width: 1440, height: 900 }, null],
   ['billing-pay', '/billing/pay/INV-2-20957c6a2a52', { width: 1440, height: 900 }, null],
+  ['admin-job-postings', '/admin/job-postings', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-candidates', '/admin/candidates', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-invoices', '/admin/invoices', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-subscriptions', '/admin/subscriptions', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-adapter-configs', '/admin/adapter-configs', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-payslips', '/admin/payslips', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-payroll-wizard', '/admin/payroll-wizard', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-departments', '/admin/departments', { width: 1440, height: 900 }, 'owner@hris.test'],
+  ['admin-shifts', '/admin/shifts', { width: 1440, height: 900 }, 'owner@hris.test'],
 
   // Mobile viewport landing
   ['landing-mobile-home', '/', { width: 390, height: 844 }, null],

@@ -233,6 +233,187 @@ $screenshots = [
     </div>
 </section>
 
+{{-- TOUR LENGKAP — Gallery 16 Screenshots dengan Marketing Caption --}}
+@php
+$tourFeatures = [
+    [
+        'image' => 'admin-dashboard.png',
+        'title' => 'Dashboard Real-time HR & Bisnis',
+        'desc' => 'Pantau headcount, kehadiran, payroll, AI screening, MRR, dan revenue dalam satu layar. 5 widget interaktif yang update otomatis. Owner dapat snapshot bisnis lengkap setiap kali login.',
+        'tag' => 'Core HR',
+        'color' => 'pink',
+    ],
+    [
+        'image' => 'admin-employees.png',
+        'title' => 'Master Data Karyawan Indonesia-First',
+        'desc' => 'NIK 16-digit encrypted, NPWP, PTKP status (TK/0 sampai K/3), BPJS dependent, dokumen + expiry alert. Custom field per perusahaan, bulk import Excel, QR code badge auto-generate.',
+        'tag' => 'Core HR',
+        'color' => 'pink',
+    ],
+    [
+        'image' => 'admin-payroll-wizard.png',
+        'title' => 'Run Payroll Wizard 3 Langkah',
+        'desc' => 'Pilih periode → pilih karyawan → klik Run. Engine PPh 21 TER 2024 (PMK 168/2023) + BPJS 5 program (cap upah 2026) hitung otomatis. Bulk approve + generate 25 slip PDF dalam 30 detik.',
+        'tag' => 'Payroll',
+        'color' => 'mint',
+    ],
+    [
+        'image' => 'admin-payroll-runs.png',
+        'title' => 'Payroll Runs — Audit-Ready History',
+        'desc' => 'Setiap payroll run tersimpan dengan breakdown lengkap: gaji pokok, tunjangan, BPJS karyawan + perusahaan, PPh 21. Bulan kemarin: Rp 252.350.000 gross untuk 25 karyawan, terbukti compliant.',
+        'tag' => 'Payroll',
+        'color' => 'mint',
+    ],
+    [
+        'image' => 'admin-payslips.png',
+        'title' => 'Slip Gaji PDF Encrypted',
+        'desc' => 'Slip gaji ter-generate per karyawan sebagai PDF 1.3MB. Auto-kirim ke email karyawan via SMTP/log driver. Password hint untuk extra security. WhatsApp dispatch ready.',
+        'tag' => 'Payroll',
+        'color' => 'mint',
+    ],
+    [
+        'image' => 'admin-attendance-logs.png',
+        'title' => 'Attendance Anti-Cheat dengan Mock GPS Detection',
+        'desc' => 'GPS koordinat + selfie + flag 🚨 mock GPS. Multi-method: GPS / Fingerprint / Face / QR. Live dashboard untuk HRD monitoring real-time. Clock-in via WhatsApp share location juga bisa.',
+        'tag' => 'Attendance',
+        'color' => 'blue',
+    ],
+    [
+        'image' => 'admin-shifts.png',
+        'title' => 'Shift Management Multi-Pola',
+        'desc' => 'Setup shift kantor (9-5), pabrik (3 shift), retail (rolling), dan custom. Geofence radius per cabang. Auto-rotation jadwal mingguan. Tolerance late/early built-in untuk hitung overtime.',
+        'tag' => 'Attendance',
+        'color' => 'blue',
+    ],
+    [
+        'image' => 'admin-leave-requests.png',
+        'title' => 'Approval Workflow yang Manager Beneran Pakai',
+        'desc' => 'Inline button "Setujui" / "Tolak" langsung di tabel — tidak perlu buka detail. Auto-update leave balance + notif ke karyawan. Multi-level approval + escalation otomatis jika manager cuti.',
+        'tag' => 'Attendance',
+        'color' => 'blue',
+    ],
+    [
+        'image' => 'admin-job-postings.png',
+        'title' => 'Lowongan Publik + ATS Pipeline',
+        'desc' => 'Publish lowongan → auto-generate URL share /karir/{token}. Kandidat apply tanpa daftar — upload CV langsung. Track pipeline: Applied → Screening → Interview → Offer → Hired.',
+        'tag' => 'Talent',
+        'color' => 'yellow',
+    ],
+    [
+        'image' => 'admin-candidates.png',
+        'title' => 'Database Kandidat + AI Match Score',
+        'desc' => 'Setiap kandidat punya AI screening multi-provider — bandingkan score dari OpenAI, DeepSeek, Groq, Llama dalam 1 view. Best score otomatis terpilih. Saved CV untuk re-apply lowongan lain.',
+        'tag' => 'Talent',
+        'color' => 'yellow',
+    ],
+    [
+        'image' => 'admin-applications.png',
+        'title' => '🧠 AI Screening — Pilih Provider, Reactive UI',
+        'desc' => 'BYOK LLM (OpenAI/DeepSeek/Groq/Ollama/dll.). Owner pilih provider per screening, modal reactive show preview + history. Compare side-by-side untuk pick best AI per lowongan.',
+        'tag' => 'AI',
+        'color' => 'purple',
+    ],
+    [
+        'image' => 'admin-invoices.png',
+        'title' => 'Billing — Invoice + PPN 11% Otomatis',
+        'desc' => 'SaaS billing engine: subscription + auto-invoice bulanan/tahunan. PPN 11% terhitung benar. Action "Kirim Email" + "Lihat Pay Page" untuk tenant. Receipt PDF, tracking paid/open/past_due.',
+        'tag' => 'Billing',
+        'color' => 'mint',
+    ],
+    [
+        'image' => 'admin-subscriptions.png',
+        'title' => 'Subscription Lifecycle — Upgrade/Cancel/Reactivate',
+        'desc' => 'Plan picker per tenant (Starter/Basic/Essential/Suite). Action "Upgrade Plan" → auto-prorate invoice. "Cancel" pakai feedback alasan, tetap aktif sampai periode habis. "Reactivate" untuk win-back.',
+        'tag' => 'Billing',
+        'color' => 'mint',
+    ],
+    [
+        'image' => 'admin-adapter-configs.png',
+        'title' => 'BYOK Integration — 49 Payment + Multi LLM',
+        'desc' => '49 preset payment gateway (Indonesia + SEA + International: Midtrans, Xendit, Stripe, PayPal, dll.) + LLM providers. Owner input API key sendiri. Format-based adapter, BUKAN per-vendor lock-in.',
+        'tag' => 'Settings',
+        'color' => 'orange',
+    ],
+    [
+        'image' => 'career-marketplace.png',
+        'title' => 'Career Marketplace — Cross-Tenant Job Board',
+        'desc' => 'Public /karir = marketplace cross-tenant. /karir/perusahaan/{slug} = per-tenant. JSON-LD JobPosting schema → Google Jobs index. Apply form dengan UU PDP consent + CV upload max 5MB.',
+        'tag' => 'Public',
+        'color' => 'pink',
+    ],
+    [
+        'image' => 'billing-pay.png',
+        'title' => 'Customer Pay Page — 6 Bucket Payment',
+        'desc' => 'Tenant bayar invoice via /billing/pay/{token}. Picker reactive: Hosted Checkout, QRIS, VA, E-Wallet, PayPal, Manual Transfer. SSL + PCI DSS compliant gateway. Auto-receipt setelah webhook.',
+        'tag' => 'Public',
+        'color' => 'pink',
+    ],
+];
+$colorMap = [
+    'pink' => 'from-candy-pink-50 to-candy-pink-100 text-candy-pink-700 ring-candy-pink-200',
+    'blue' => 'from-candy-blue-50 to-candy-blue-100 text-candy-blue-700 ring-candy-blue-200',
+    'mint' => 'from-candy-mint-50 to-candy-mint-100 text-candy-mint-700 ring-candy-mint-200',
+    'yellow' => 'from-candy-yellow-50 to-candy-yellow-100 text-candy-yellow-700 ring-candy-yellow-200',
+    'purple' => 'from-candy-purple-50 to-candy-purple-100 text-candy-purple-700 ring-candy-purple-200',
+    'orange' => 'from-brand-50 to-brand-100 text-brand-700 ring-brand-200',
+];
+@endphp
+
+<section id="tour" class="relative py-24 bg-candy-soft overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="blob blob-pink w-96 h-96 top-20 -left-20"></div>
+        <div class="blob blob-purple w-96 h-96 bottom-20 -right-20"></div>
+        <div class="blob blob-yellow w-72 h-72 top-1/2 left-1/3 animate-float"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-6">
+        <div class="text-center mb-14">
+            <div class="inline-block bg-white/80 backdrop-blur text-candy-purple-700 px-4 py-1.5 rounded-full text-sm font-bold mb-4 shadow-candy">
+                📸 Tour Lengkap Aplikasi
+            </div>
+            <h2 class="text-4xl md:text-5xl font-extrabold leading-tight">
+                Lihat <span class="bg-clip-text text-transparent bg-gradient-to-r from-candy-pink-500 via-candy-purple-500 to-brand-500">Setiap Sudut</span> Aplikasi
+            </h2>
+            <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
+                {{ count($tourFeatures) }} screenshot real dari aplikasi production — BUKAN mockup. Klik setiap kartu untuk detail fitur dan benefit bisnis-nya.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach ($tourFeatures as $i => $f)
+                <div class="group bg-white/80 backdrop-blur rounded-3xl shadow-candy hover:shadow-candy-lg hover:-translate-y-2 transition transform overflow-hidden">
+                    <div class="aspect-[16/10] overflow-hidden bg-gradient-to-br {{ $colorMap[$f['color']] }}">
+                        <div class="px-4 pt-3 flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+                            <span class="ml-3 text-[10px] font-mono text-gray-500 truncate">{{ $f['image'] }}</span>
+                        </div>
+                        <img src="{{ asset('marketing/screenshots/' . $f['image']) }}"
+                             alt="{{ $f['title'] }}"
+                             loading="lazy"
+                             class="w-full h-auto rounded-t-xl mt-2 shadow-lg group-hover:scale-105 transition duration-500">
+                    </div>
+                    <div class="p-6">
+                        <span class="inline-block px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider rounded-full ring-1 bg-gradient-to-r {{ $colorMap[$f['color']] }}">
+                            {{ $f['tag'] }}
+                        </span>
+                        <h3 class="text-lg font-extrabold text-gray-900 mt-3 leading-tight">{{ $f['title'] }}</h3>
+                        <p class="mt-2 text-sm text-gray-700 leading-relaxed">{{ $f['desc'] }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="mt-12 text-center">
+            <p class="text-sm text-gray-600 mb-4">Mau coba langsung tanpa daftar?</p>
+            <a href="/admin/login" class="inline-flex items-center gap-2 bg-gradient-to-r from-candy-pink-500 via-candy-purple-500 to-brand-500 text-white px-8 py-4 rounded-2xl font-bold shadow-candy-lg hover:shadow-candy-glow transition transform hover:-translate-y-1">
+                🚀 Login Demo &mdash; owner@hris.test / password
+            </a>
+        </div>
+    </div>
+</section>
+
 {{-- COMPACT FEATURES GRID --}}
 <section class="py-24 bg-candy-lavender">
     <div class="max-w-7xl mx-auto px-6">
