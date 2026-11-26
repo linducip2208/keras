@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static const _brand = Color(0xFFF97316); // brand-500 (matches Laravel landing)
-  static const _brandDark = Color(0xFFEA580C);
 
   static ThemeData light() {
     final base = ThemeData.light(useMaterial3: true);

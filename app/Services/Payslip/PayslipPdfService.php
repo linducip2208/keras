@@ -33,9 +33,11 @@ class PayslipPdfService
         ])->setPaper('A4');
 
         $pdf->setOption('isRemoteEnabled', false);
-        // NOTE: DomPDF v3+ removed setEncryption. For password-locked PDF,
-        // post-process dengan qpdf:  qpdf --encrypt $password $password 256 -- input.pdf output.pdf
-        // Untuk MVP, PDF disimpan tanpa password tapi tersedia password_hint untuk via channel terpisah.
+        // KEJUJURAN FITUR: DomPDF v3+ tidak mendukung enkripsi PDF, sehingga
+        // password di bawah TIDAK diterapkan ke file. PDF disimpan di storage
+        // privat (disk local) dan hanya diakses via download terautentikasi.
+        // Enkripsi PDF butuh post-process qpdf — lihat docs/TECHNICAL-DEBT.md.
+        // password_hint sengaja dikosongkan agar tidak menyesatkan user.
 
         $path = "payslips/{$item->employee_id}/" . now()->format('Y/m') . "/{$slipNumber}.pdf";
         Storage::disk('local')->put($path, $pdf->output());
@@ -48,7 +50,7 @@ class PayslipPdfService
             'slip_number' => $slipNumber,
             'slip_date' => now()->toDateString(),
             'pdf_path' => $path,
-            'password_hint' => $passwordMode === 'nik' ? 'Gunakan NIK Anda' : 'Tanggal lahir format ddmmyyyy',
+            'password_hint' => null,
         ];
 
         if ($existing) {
@@ -90,11 +92,18 @@ class PayslipPdfService
 
     private function generateSlipNumber(PayrollItem $item): string
     {
-        return sprintf(
-            'SLIP-%s-%s-%05d',
-            now()->format('Y'),
-            now()->format('m'),
-            $item->id,
-        );
+        // Nomor slip mengikuti periode payroll (YYYYMM), bukan tanggal generate,
+        // agar backpay/koreksi tidak salah label.
+        $periodLabel = '000000';
+        try {
+            $period = $item->run?->period;
+            $refDate = $period?->payroll_date ?? $period?->end_date;
+            if ($refDate) {
+                $periodLabel = $refDate->format('Ym');
+            }
+        } catch (\Throwable) {
+            // fallback ke format default di bawah
+        }
+        return sprintf('SLIP-%s-%05d', $periodLabel, $item->id);
     }
 }

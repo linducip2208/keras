@@ -36,6 +36,10 @@ class CVScreeningService
         ]);
 
         try {
+            if ($adapterConfig->tenant_id !== $application->tenant_id) {
+                throw new \RuntimeException('Adapter bukan milik tenant lamaran ini.');
+            }
+
             $adapter = $this->registry->resolve($adapterConfig->id);
             if (!$adapter instanceof LLMAdapterInterface) {
                 throw new \RuntimeException('Adapter ' . $adapterConfig->name . ' bukan LLM adapter');
@@ -135,11 +139,77 @@ PROMPT;
     private function extractCvText(Candidate $candidate, ?Application $application = null): string
     {
         $coverLetter = $application?->cover_letter ?: '-';
-        return "Nama: {$candidate->full_name}\n" .
+        $header = "Nama: {$candidate->full_name}\n" .
                "Posisi saat ini: " . ($candidate->current_position ?: '-') . "\n" .
                "Pengalaman: " . ($candidate->years_experience ?: 0) . " tahun\n" .
                "Lokasi: " . ($candidate->location ?: '-') . "\n" .
                "LinkedIn: " . ($candidate->linkedin_url ?: '-') . "\n" .
                "Cover Letter:\n{$coverLetter}";
+
+        $fileText = $this->extractFileText($candidate->cv_path);
+
+        return $header . "\n\nIsi CV (file):\n" . $fileText;
+    }
+
+    /**
+     * Ekstrak teks dari file CV apa adanya (tanpa library eksternal):
+     * - txt/md/csv/log → dibaca langsung
+     * - docx → XML document.xml di-strip tag (tanpa gambar/tabel kompleks)
+     * - pdf/doc → TIDAK didukung parser native; dikembalikan marker jujur
+     *   NEEDS-PDF-PARSER agar AI tidak menilai dari data kosong.
+     */
+    private function extractFileText(?string $cvPath): string
+    {
+        if (!$cvPath) {
+            return '[tidak ada file CV terlampir]';
+        }
+
+        try {
+            $disk = \Illuminate\Support\Facades\Storage::disk('public');
+            if (!$disk->exists($cvPath)) {
+                return '[file CV tidak ditemukan di storage: ' . basename($cvPath) . ']';
+            }
+
+            $ext = strtolower(pathinfo($cvPath, PATHINFO_EXTENSION));
+
+            if (in_array($ext, ['txt', 'md', 'csv', 'log'], true)) {
+                $text = $disk->get($cvPath);
+                return $this->truncateText($text);
+            }
+
+            if ($ext === 'docx') {
+                return $this->truncateText($this->extractDocx($disk->path($cvPath)));
+            }
+
+            return '[NEEDS-PDF-PARSER: file .' . $ext . ' belum bisa dibaca otomatis — '
+                . 'penilaian hanya dari metadata + cover letter. Upload versi .docx/.txt agar akurat.]';
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('CV text extract gagal: ' . $e->getMessage());
+            return '[gagal membaca file CV: ' . $e->getMessage() . ']';
+        }
+    }
+
+    private function extractDocx(string $absPath): string
+    {
+        $zip = new \ZipArchive();
+        if ($zip->open($absPath) !== true) {
+            return '[file .docx rusak / tidak bisa dibuka]';
+        }
+        $xml = $zip->getFromName('word/document.xml') ?: '';
+        $zip->close();
+        if (!$xml) {
+            return '[dokumen .docx kosong]';
+        }
+        $text = preg_replace('/<w:p[^>]*>/i', "\n", strip_tags($xml));
+        return trim(preg_replace('/[ \t]+/', ' ', html_entity_decode($text ?? '')));
+    }
+
+    private function truncateText(string $text, int $max = 6000): string
+    {
+        $text = trim($text);
+        if (mb_strlen($text) <= $max) {
+            return $text === '' ? '[file CV kosong]' : $text;
+        }
+        return mb_substr($text, 0, $max) . "\n[...dipotong, file lebih panjang...]";
     }
 }

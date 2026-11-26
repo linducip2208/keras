@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\AttendanceLog;
 use App\Models\Branch;
 use App\Models\Employee;
+use App\Models\EmployeeSchedule;
 use App\Models\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class AttendanceController extends Controller
 {
@@ -22,6 +24,11 @@ class AttendanceController extends Controller
             'is_mock_gps' => 'sometimes|boolean',
         ]);
 
+        // Mock-GPS ditolak di server (bukan sekadar dicatat).
+        if ($request->boolean('is_mock_gps') && config('attendance.reject_mock_gps', true)) {
+            return response()->json(['error' => 'Lokasi terdeteksi palsu (mock GPS). Matikan aplikasi fake-GPS dan coba lagi.'], 422);
+        }
+
         $employee = $this->resolveEmployee($request);
         $today = today();
 
@@ -30,8 +37,19 @@ class AttendanceController extends Controller
             return response()->json(['error' => 'Sudah check-in hari ini pada ' . $log->check_in_at->format('H:i')], 422);
         }
 
+        // Validasi selfie: harus file hasil upload resmi, bukan path lokal HP.
+        if ($request->photo_path) {
+            $this->assertServerPhoto($request->photo_path);
+        }
+
         $branch = $employee->branch_id ? Branch::find($employee->branch_id) : null;
-        $shift = Shift::where('tenant_id', $employee->tenant_id)->where('code', 'REG')->first();
+        // Shift mengikuti jadwal karyawan hari ini; fallback ke REG bila tak ada jadwal.
+        $schedule = EmployeeSchedule::with('shift')
+            ->where('employee_id', $employee->id)
+            ->where('date', $today->toDateString())
+            ->first();
+        $shift = ($schedule && !$schedule->is_off_day) ? $schedule->shift
+            : Shift::where('tenant_id', $employee->tenant_id)->where('code', 'REG')->first();
 
         $log->fill([
             'tenant_id' => $employee->tenant_id,
@@ -71,7 +89,12 @@ class AttendanceController extends Controller
             'longitude' => 'required|numeric',
             'photo_path' => 'nullable|string',
             'method' => 'required|in:gps,fingerprint,qr,face,manual',
+            'is_mock_gps' => 'sometimes|boolean',
         ]);
+
+        if ($request->boolean('is_mock_gps') && config('attendance.reject_mock_gps', true)) {
+            return response()->json(['error' => 'Lokasi terdeteksi palsu (mock GPS). Matikan aplikasi fake-GPS dan coba lagi.'], 422);
+        }
 
         $employee = $this->resolveEmployee($request);
         $today = today();
@@ -82,6 +105,10 @@ class AttendanceController extends Controller
         }
         if ($log->check_out_at) {
             return response()->json(['error' => 'Sudah check-out hari ini pada ' . $log->check_out_at->format('H:i')], 422);
+        }
+
+        if ($request->photo_path) {
+            $this->assertServerPhoto($request->photo_path);
         }
 
         $log->update([
@@ -113,6 +140,43 @@ class AttendanceController extends Controller
             ->limit(30)
             ->get();
         return response()->json(['data' => $logs]);
+    }
+
+    /**
+     * Upload selfie clock-in (multipart). Mengembalikan server path yang
+     * wajib dipakai sebagai photo_path pada check-in/out.
+     */
+    public function uploadPhoto(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:' . config('attendance.photo_max_kb', 4096),
+        ]);
+
+        $employee = $this->resolveEmployee($request);
+        $disk = config('attendance.photo_disk', 'local');
+        $path = $request->file('photo')->store(
+            config('attendance.photo_dir') . "/{$employee->tenant_id}/{$employee->id}/" . today()->toDateString(),
+            $disk
+        );
+
+        return response()->json(['message' => 'Foto tersimpan', 'photo_path' => $path]);
+    }
+
+    /**
+     * Pastikan photo_path adalah file hasil uploadPhoto di storage server,
+     * bukan path lokal dari HP (/data/..., /storage/emulated/...).
+     */
+    private function assertServerPhoto(string $path): void
+    {
+        $dir = config('attendance.photo_dir', 'attendance-photos');
+        $disk = config('attendance.photo_disk', 'local');
+
+        if (!str_starts_with($path, $dir . '/') || str_contains($path, '..')) {
+            abort(422, 'photo_path tidak valid. Upload selfie via endpoint /attendance/photo.');
+        }
+        if (!Storage::disk($disk)->exists($path)) {
+            abort(422, 'File selfie tidak ditemukan di server. Upload ulang selfie.');
+        }
     }
 
     private function resolveEmployee(Request $request): Employee

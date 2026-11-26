@@ -57,6 +57,13 @@ class ApprovalEngine
     public function approve(ApprovalRequestStep $step, ?string $comment = null): void
     {
         DB::transaction(function () use ($step, $comment) {
+            // Guard idempotensi: muat ulang dan tolak jika step sudah diproses
+            // (mencegah double-approve dari retry/concurrent request).
+            $step->refresh();
+            if ($step->action !== 'pending') {
+                return;
+            }
+
             $step->update([
                 'action' => 'approved',
                 'comment' => $comment,
@@ -81,6 +88,11 @@ class ApprovalEngine
     public function reject(ApprovalRequestStep $step, string $comment): void
     {
         DB::transaction(function () use ($step, $comment) {
+            $step->refresh();
+            if ($step->action !== 'pending') {
+                return;
+            }
+
             $step->update([
                 'action' => 'rejected',
                 'comment' => $comment,
@@ -171,13 +183,15 @@ class ApprovalEngine
 
         // Side effects per type
         if ($cls === \App\Models\LeaveRequest::class) {
-            // Move pending to used
+            // Move pending to used. days_count di-cast float agar aman
+            // dari interpolasi SQL (nilai selalu numerik dari DB).
+            $days = (float) $r->days_count;
             \App\Models\LeaveBalance::where('employee_id', $r->employee_id)
                 ->where('leave_type_id', $r->leave_type_id)
                 ->where('year', now()->year)
                 ->update([
-                    'pending' => DB::raw('GREATEST(pending - ' . $r->days_count . ', 0)'),
-                    'used' => DB::raw('used + ' . $r->days_count),
+                    'pending' => DB::raw('GREATEST(pending - ' . $days . ', 0)'),
+                    'used' => DB::raw('used + ' . $days),
                 ]);
         }
     }
@@ -194,11 +208,12 @@ class ApprovalEngine
 
         // Restore leave balance pending
         if ($cls === \App\Models\LeaveRequest::class) {
+            $days = (float) $r->days_count;
             \App\Models\LeaveBalance::where('employee_id', $r->employee_id)
                 ->where('leave_type_id', $r->leave_type_id)
                 ->where('year', now()->year)
                 ->update([
-                    'pending' => DB::raw('GREATEST(pending - ' . $r->days_count . ', 0)'),
+                    'pending' => DB::raw('GREATEST(pending - ' . $days . ', 0)'),
                 ]);
         }
     }

@@ -11,4 +11,7 @@ class BPJSCalculation extends Model
     protected $table = 'bpjs_calculations';
     protected $fillable = ['tenant_id','payroll_item_id','employee_id','program','basis_amount','employer_amount','employee_amount'];
     protected $casts = ['basis_amount'=>'decimal:2','employer_amount'=>'decimal:2','employee_amount'=>'decimal:2'];
+
+    public function employee() { return $this->belongsTo(Employee::class); }
+    public function payrollItem() { return $this->belongsTo(PayrollItem::class); }
 }

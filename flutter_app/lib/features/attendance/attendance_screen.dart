@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,6 +17,8 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
   bool _loading = false;
   String? _message;
   Map<String, dynamic>? _todayLog;
+  List<dynamic> _history = [];
+  String? _historyError;
 
   @override
   void initState() {
@@ -27,8 +30,28 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
     try {
       final dio = ref.read(apiClientProvider).dio;
       final resp = await dio.get('/attendance/today');
+      if (!mounted) return;
       setState(() => _todayLog = resp.data['data']);
-    } catch (_) {}
+      _loadHistory();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _todayLog = null);
+    }
+  }
+
+  Future<void> _loadHistory() async {
+    try {
+      final dio = ref.read(apiClientProvider).dio;
+      final resp = await dio.get('/attendance/logs');
+      if (!mounted) return;
+      setState(() {
+        _history = (resp.data['data'] as List?) ?? [];
+        _historyError = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _historyError = 'Riwayat gagal dimuat.');
+    }
   }
 
   Future<Position?> _getLocation() async {
@@ -43,7 +66,10 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
     if (permission == LocationPermission.deniedForever) return null;
 
     return await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 20),
+      ),
     );
   }
 
@@ -56,26 +82,54 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
     );
   }
 
+  /// Upload selfie ke server, kembalikan server path.
+  /// Backend menolak path lokal HP — wajib lewat endpoint ini.
+  Future<String> _uploadSelfie(XFile selfie) async {
+    final dio = ref.read(apiClientProvider).dio;
+    final form = FormData.fromMap({
+      'photo': await MultipartFile.fromFile(selfie.path, filename: 'selfie.jpg'),
+    });
+    final resp = await dio.post('/attendance/photo', data: form);
+    return resp.data['photo_path'] as String;
+  }
+
+  String _friendlyError(Object e) {
+    if (e is DioException) {
+      final data = e.response?.data;
+      if (data is Map) {
+        final msg = data['error'] ?? data['message'];
+        if (msg != null) return msg.toString();
+      }
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        return 'Koneksi lambat. Coba lagi.';
+      }
+      return 'Jaringan bermasalah. Coba lagi.';
+    }
+    return 'Terjadi kesalahan: $e';
+  }
+
   Future<void> _checkIn() async {
     setState(() { _loading = true; _message = null; });
     try {
       final position = await _getLocation();
       if (position == null) {
-        setState(() => _message = 'GPS tidak tersedia atau ditolak');
+        setState(() => _message = 'GPS tidak tersedia. Nyalakan lokasi & izinkan akses.');
         return;
       }
       final selfie = await _takeSelfie();
       if (selfie == null) {
-        setState(() => _message = 'Selfie dibatalkan');
+        setState(() => _message = 'Selfie dibatalkan.');
         return;
       }
+      final photoPath = await _uploadSelfie(selfie);
 
       final dio = ref.read(apiClientProvider).dio;
       final resp = await dio.post('/attendance/check-in', data: {
         'latitude': position.latitude,
         'longitude': position.longitude,
         'method': 'gps',
-        'photo_path': selfie.path,
+        'photo_path': photoPath,
         'is_mock_gps': position.isMocked,
       });
 
@@ -83,8 +137,9 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
         _message = '✅ ${resp.data['message']}';
         _todayLog = resp.data['data'];
       });
+      _loadHistory();
     } catch (e) {
-      setState(() => _message = 'Gagal: $e');
+      setState(() => _message = _friendlyError(e));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -94,24 +149,33 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
     setState(() { _loading = true; _message = null; });
     try {
       final position = await _getLocation();
-      if (position == null) return;
+      if (position == null) {
+        setState(() => _message = 'GPS tidak tersedia. Nyalakan lokasi & izinkan akses.');
+        return;
+      }
       final selfie = await _takeSelfie();
-      if (selfie == null) return;
+      if (selfie == null) {
+        setState(() => _message = 'Selfie dibatalkan.');
+        return;
+      }
+      final photoPath = await _uploadSelfie(selfie);
 
       final dio = ref.read(apiClientProvider).dio;
       final resp = await dio.post('/attendance/check-out', data: {
         'latitude': position.latitude,
         'longitude': position.longitude,
         'method': 'gps',
-        'photo_path': selfie.path,
+        'photo_path': photoPath,
+        'is_mock_gps': position.isMocked,
       });
 
       setState(() {
         _message = '✅ ${resp.data['message']}';
         _todayLog = resp.data['data'];
       });
+      _loadHistory();
     } catch (e) {
-      setState(() => _message = 'Gagal: $e');
+      setState(() => _message = _friendlyError(e));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -143,8 +207,8 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _StatusRow(label: 'Check-in', value: _todayLog?['check_in_at']?.toString().substring(11, 16) ?? '–'),
-                      _StatusRow(label: 'Check-out', value: _todayLog?['check_out_at']?.toString().substring(11, 16) ?? '–'),
+                      _StatusRow(label: 'Check-in', value: _hhmm(_todayLog?['check_in_at']?.toString() ?? '')),
+                      _StatusRow(label: 'Check-out', value: _hhmm(_todayLog?['check_out_at']?.toString() ?? '')),
                     ],
                   ),
                 ),
@@ -180,6 +244,37 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
                 const SizedBox(height: 16),
                 Text(_message!, style: const TextStyle(fontSize: 14)),
               ],
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Riwayat 30 Hari', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 8),
+              if (_historyError != null)
+                Text(_historyError!, style: const TextStyle(color: Colors.black54)),
+              if (_history.isEmpty && _historyError == null)
+                const Text('Belum ada riwayat.', style: TextStyle(color: Colors.black54)),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _history.length,
+                  itemBuilder: (_, i) {
+                    final h = (_history[i] as Map<String, dynamic>);
+                    final ci = (h['check_in_at'] ?? '-').toString();
+                    final co = (h['check_out_at'] ?? '-').toString();
+                    final t = (h['status'] ?? '').toString();
+                    return Card(
+                      child: ListTile(
+                        title: Text((h['date'] ?? '-').toString().substring(0, 10)),
+                        subtitle: Text('In: ${_hhmm(ci)}  •  Out: ${_hhmm(co)}'),
+                        trailing: t.isEmpty ? null : Chip(
+                          label: Text(t, style: const TextStyle(fontSize: 11)),
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -188,8 +283,9 @@ class _AttendanceScreenState extends ConsumerState<AttendanceScreen> {
   }
 }
 
-class _StatusRow extends StatelessWidget {
-  final String label;
+String _hhmm(String v) => v.length >= 16 ? v.substring(11, 16) : '–';
+
+class _StatusRow extends StatelessWidget {  final String label;
   final String value;
   const _StatusRow({required this.label, required this.value});
 

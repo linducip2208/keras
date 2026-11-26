@@ -25,6 +25,10 @@ class AuthController extends Controller
 
         $user->update(['last_login_at' => now(), 'last_login_ip' => $request->ip()]);
 
+        // Satu token aktif per device_name — login ulang di device yang sama
+        // mencabut sesi sebelumnya (mencegah penumpukan token).
+        $user->tokens()->where('name', $request->device_name)->delete();
+
         $token = $user->createToken($request->device_name, ['employee:read', 'attendance:write', 'leave:write', 'reimbursement:write']);
 
         return response()->json([

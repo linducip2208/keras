@@ -11,11 +11,12 @@ Route::prefix('v1')->group(function () {
     // Auth
     Route::post('/auth/login', [AuthController::class, 'login']);
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'tenant.api'])->group(function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::get('/me', [AuthController::class, 'me']);
 
         // Attendance
+        Route::post('/attendance/photo', [AttendanceController::class, 'uploadPhoto']);
         Route::post('/attendance/check-in', [AttendanceController::class, 'checkIn']);
         Route::post('/attendance/check-out', [AttendanceController::class, 'checkOut']);
         Route::get('/attendance/today', [AttendanceController::class, 'today']);

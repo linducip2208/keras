@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,9 +13,11 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _emailCtrl = TextEditingController(text: 'employee@hris.test');
-  final _passwordCtrl = TextEditingController(text: 'password');
+  // Prefill demo HANYA untuk debug build — tidak ikut ke release.
+  final _emailCtrl = TextEditingController(text: kDebugMode ? 'employee@hris.test' : '');
+  final _passwordCtrl = TextEditingController(text: kDebugMode ? 'password' : '');
   bool _loading = false;
+  bool _obscure = true;
   String? _error;
 
   Future<void> _login() async {
@@ -22,12 +26,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await ref.read(authServiceProvider).login(
         _emailCtrl.text.trim(),
         _passwordCtrl.text,
-        'mobile-${DateTime.now().millisecondsSinceEpoch}',
+        'mobile-app',
       );
       // ignore: use_build_context_synchronously
       ref.invalidate(authStateProvider);
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? e.response?.data?['error'] ?? 'Periksa koneksi internet.';
+      setState(() => _error = 'Login gagal: $msg');
     } catch (e) {
-      setState(() => _error = 'Login gagal: ${e.toString()}');
+      setState(() => _error = 'Login gagal: $e');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -61,7 +68,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 40),
               TextField(controller: _emailCtrl, decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email_outlined))),
               const SizedBox(height: 16),
-              TextField(controller: _passwordCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Password', prefixIcon: Icon(Icons.lock_outline))),
+              TextField(controller: _passwordCtrl, obscureText: _obscure,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                  ),
+                )),
               if (_error != null) ...[
                 const SizedBox(height: 12),
                 Text(_error!, style: const TextStyle(color: Colors.red)),

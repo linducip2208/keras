@@ -13,6 +13,13 @@ class PPh21TerCalculator
 {
     public function __construct(private int $year = 2026) {}
 
+    /** Override tahun regulasi (mis. dari tanggal periode payroll). */
+    public function setYear(int $year): static
+    {
+        $this->year = $year;
+        return $this;
+    }
+
     public function calculate(float $monthlyGross, string $ptkpStatus): array
     {
         $category = $this->resolveCategory($ptkpStatus);

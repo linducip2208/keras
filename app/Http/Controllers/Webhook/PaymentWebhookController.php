@@ -15,13 +15,15 @@ class PaymentWebhookController extends Controller
     public function handle(Request $request, int $adapterConfigId)
     {
         $adapterConfig = AdapterConfig::find($adapterConfigId);
-        if (!$adapterConfig || $adapterConfig->domain !== 'payment') {
+        if (!$adapterConfig || $adapterConfig->domain !== 'payment' || !$adapterConfig->is_active) {
             return response()->json(['error' => 'Invalid adapter'], 404);
         }
 
         $rawBody = $request->getContent();
         $headers = collect($request->headers->all())
             ->mapWithKeys(fn ($v, $k) => [strtolower($k) => $v])
+            // Jangan simpan kredensial/signature ke DB log.
+            ->except(['authorization', 'x-signature', 'x-hub-signature', 'x-hub-signature-256', 'cookie', 'set-cookie'])
             ->all();
 
         // Log webhook for audit (always, before processing)

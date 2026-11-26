@@ -13,5 +13,6 @@ class ApprovalRequest extends Model
 
     public function workflow() { return $this->belongsTo(ApprovalWorkflow::class); }
     public function steps() { return $this->hasMany(ApprovalRequestStep::class)->orderBy('step_order'); }
+    public function requester() { return $this->belongsTo(Employee::class, 'requester_employee_id'); }
     public function requestable() { return $this->morphTo(); }
 }

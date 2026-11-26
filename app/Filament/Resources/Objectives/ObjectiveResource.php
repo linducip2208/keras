@@ -38,7 +38,7 @@ class ObjectiveResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\KeyResultsRelationManager::class,
         ];
     }
 

@@ -12,4 +12,5 @@ class ApprovalRequestStep extends Model
     protected $casts = ['acted_at'=>'datetime','due_at'=>'datetime'];
 
     public function approver() { return $this->belongsTo(Employee::class, 'approver_employee_id'); }
+    public function approvalRequest() { return $this->belongsTo(ApprovalRequest::class); }
 }

@@ -16,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\RequirePair::class,
             \App\Http\Middleware\IdentifyTenant::class,
         ]);
+        $middleware->api(append: [
+            \App\Http\Middleware\IdentifyTenant::class,
+        ]);
+        $middleware->alias([
+            'tenant.api' => \App\Http\Middleware\ResolveApiTenant::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

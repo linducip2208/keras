@@ -25,34 +25,33 @@ class IdentifyTenant
     private function resolveTenant(Request $request): ?Tenant
     {
         try {
-            $headerTenant = $request->header('X-Tenant-ID');
-            if ($headerTenant) {
-                return Tenant::where('slug', $headerTenant)
-                    ->orWhere('id', $headerTenant)
-                    ->first();
+            // 1. Request terautentikasi selalu menang: ikut tenant milik user.
+            //    Ini menutup celah X-Tenant-ID spoofing (CRITICAL-2).
+            $user = auth()->user();
+            if ($user && $user->tenant_id) {
+                return Tenant::where('id', $user->tenant_id)->where('status', '!=', 'suspended')->first();
             }
 
+            // 2. Pre-auth / publik: subdomain atau custom domain.
+            //    TIDAK ADA lagi fallback ke tenant 'acme' — tanpa tenant yang
+            //    cocok, request berjalan sebagai konteks publik tanpa scope.
             $host = $request->getHost();
             $baseDomain = config('app.base_domain', 'hris.test');
 
-            // hris.test (root) → default tenant
             if ($host === $baseDomain) {
-                return Tenant::where('slug', 'acme')->first()
-                    ?? Tenant::where('subdomain', 'default')->first();
+                return null;
             }
 
-            // {subdomain}.hris.test
             if (str_ends_with($host, '.' . $baseDomain)) {
                 $subdomain = str_replace('.' . $baseDomain, '', $host);
-                return Tenant::where('subdomain', $subdomain)->first()
-                    ?? Tenant::where('slug', 'acme')->first();
+                return Tenant::where('subdomain', $subdomain)->first();
             }
 
-            // Custom domain
-            return Tenant::where('custom_domain', $host)->first()
-                ?? Tenant::where('slug', 'acme')->first();
+            return Tenant::where('custom_domain', $host)->first();
         } catch (\Throwable $e) {
-            // DB unavailable / wrong connection — fail gracefully, jangan break aplikasi
+            // DB error: untuk request terautentikasi kita FAIL-CLOSED di
+            // ResolveApiTenant / lapisan otorisasi, bukan di sini agar
+            // halaman publik tidak ikut mati. Kegagalan dicatat.
             \Log::warning('IdentifyTenant resolve failed: ' . $e->getMessage());
             return null;
         }

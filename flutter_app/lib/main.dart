@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'core/network/api_client.dart';
 import 'core/theme/app_theme.dart';
 import 'core/auth/auth_provider.dart';
 import 'features/auth/login_screen.dart';
@@ -37,6 +38,9 @@ class AuthGate extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ApiClient.onUnauthorized = () {
+      ref.invalidate(authStateProvider);
+    };
     final auth = ref.watch(authStateProvider);
     return auth.when(
       data: (state) => state.isAuthenticated

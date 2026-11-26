@@ -35,6 +35,8 @@ class BillingService
 
         $tenant = Tenant::find($invoice->tenant_id);
 
+        $invoiceToken = \App\Http\Controllers\Web\BillingController::tokenFor($invoice);
+
         $result = $adapter->createCharge([
             'reference' => $payment->reference,
             'amount' => $invoice->total_amount,
@@ -42,8 +44,8 @@ class BillingService
             'customer_email' => $tenant->billing_email,
             'customer_name' => $tenant->name,
             'description' => "Invoice {$invoice->number}",
-            'success_url' => config('app.url') . "/billing/success/{$payment->reference}",
-            'cancel_url' => config('app.url') . "/billing/cancel/{$payment->reference}",
+            'success_url' => config('app.url') . '/billing/success/' . $invoiceToken,
+            'cancel_url' => config('app.url') . '/billing/cancel/' . $invoiceToken,
             'webhook_url' => config('app.url') . "/webhook/payment/{$adapterConfig->id}",
         ]);
 
@@ -112,7 +114,8 @@ class BillingService
             : $subscription->plan->price_monthly;
 
         $taxableAmount = $amount * $subscription->seats;
-        $tax = $taxableAmount * 0.11; // PPN 11%
+        $ppnRate = (float) config('billing.ppn_rate', 0.11);
+        $tax = $taxableAmount * $ppnRate;
 
         return Invoice::create([
             'tenant_id' => $subscription->tenant_id,
@@ -137,7 +140,7 @@ class BillingService
                     'amount' => $taxableAmount,
                 ],
                 [
-                    'description' => 'PPN 11%',
+                    'description' => 'PPN (' . rtrim(rtrim(number_format($ppnRate * 100, 2), '0'), '.') . '%)',
                     'amount' => $tax,
                 ],
             ],

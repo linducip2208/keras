@@ -254,7 +254,12 @@ class BotEngine
     private function handleLeaveReason(string $body, WhatsAppSession $session, Employee $employee, int $tenantId): void
     {
         $data = $session->state_data ?? [];
-        $type = LeaveType::find($data['leave_type_id']);
+        $type = LeaveType::where('tenant_id', $tenantId)->find($data['leave_type_id'] ?? 0);
+        if (!$type) {
+            $session->update(['state' => 'idle', 'state_data' => null]);
+            $this->reply($session->phone_number, $tenantId, "Jenis cuti tidak valid. Ketik *menu* untuk mulai lagi.");
+            return;
+        }
 
         $start = Carbon::parse($data['start_date']);
         $end = Carbon::parse($data['end_date']);
@@ -312,9 +317,8 @@ class BotEngine
         }
 
         $this->reply($session->phone_number, $tenantId,
-            "💰 *Slip Gaji Terbaru*\n\nNomor: {$payslip->slip_number}\nTanggal: " . $payslip->slip_date->format('d M Y') . "\n\nPDF akan kami kirim ke email Anda. Buka dengan password: NIK Anda (16 digit)."
+            "💰 *Slip Gaji Terbaru*\n\nNomor: {$payslip->slip_number}\nTanggal: " . $payslip->slip_date->format('d M Y') . "\n\nUnduh PDF lengkap di aplikasi mobile / portal ESS."
         );
-        // TODO: send PDF as WA document attachment using BotEngine outbound adapter
     }
 
     private function showApprovalInbox(WhatsAppSession $session, Employee $employee, int $tenantId): void
@@ -351,7 +355,7 @@ class BotEngine
                 return;
             }
 
-            $step = \App\Models\ApprovalRequestStep::find($stepId);
+            $step = \App\Models\ApprovalRequestStep::where('tenant_id', $tenantId)->find($stepId);
             if (!$step || $step->approver_employee_id !== $employee->id) {
                 $this->reply($session->phone_number, $tenantId, "Request tidak ditemukan atau bukan inbox Anda.");
                 return;

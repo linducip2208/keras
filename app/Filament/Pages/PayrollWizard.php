@@ -56,7 +56,7 @@ class PayrollWizard extends Page
                                 ->columns(2)
                                 ->schema([
                                     Select::make('company_id')->label('Perusahaan')
-                                        ->options(Company::pluck('name', 'id'))->required()->columnSpanFull(),
+                                        ->options(fn () => Company::where('tenant_id', auth()->user()->tenant_id)->pluck('name', 'id'))->required()->columnSpanFull(),
                                     TextInput::make('period_name')->label('Nama Periode')->placeholder('2026-05')->required(),
                                     Select::make('period_type')->label('Tipe')
                                         ->options(['monthly'=>'Bulanan','weekly'=>'Mingguan','biweekly'=>'Dua-mingguan','daily'=>'Harian'])
@@ -89,7 +89,7 @@ class PayrollWizard extends Page
                         ->icon('heroicon-o-magnifying-glass')
                         ->schema([
                             Section::make('Review Output')
-                                ->description('Setelah calculate, sistem akan menampilkan total gross/net/tax/BPJS. Anda dapat re-run atau approve.')
+                                ->description('Setelah klik Run Payroll, verifikasi angka di menu Payroll Runs → buka run → cek Item Gaji per karyawan. Re-run aman (idempotent per run).')
                                 ->schema([]),
                         ]),
 
@@ -97,7 +97,7 @@ class PayrollWizard extends Page
                         ->icon('heroicon-o-check-badge')
                         ->schema([
                             Section::make('Approve & Lock')
-                                ->description('Approve untuk lock payroll dan persiapkan disbursement (file batch bank atau instant API).')
+                                ->description('Approve & lock dilakukan di halaman Edit Payroll Run (ubah status draft → approved → locked), lalu generate slip dan disbursement. Lihat menu Payroll Runs.')
                                 ->schema([]),
                         ]),
                 ])
@@ -108,28 +108,54 @@ class PayrollWizard extends Page
     public function runPayroll(): void
     {
         $data = $this->data;
+        $tenantId = auth()->user()->tenant_id;
+        abort_if(!$tenantId, 403, 'Akun tidak terhubung ke tenant.');
 
-        $period = PayrollPeriod::create([
-            'tenant_id' => auth()->user()->tenant_id,
-            'company_id' => $data['company_id'],
-            'name' => $data['period_name'],
-            'period_type' => $data['period_type'],
-            'start_date' => $data['start_date'],
-            'end_date' => $data['end_date'],
-            'cutoff_attendance_date' => $data['cutoff_attendance_date'],
-            'payroll_date' => $data['payroll_date'],
-            'status' => 'cutoff',
-        ]);
+        // Cegah periode ganda untuk perusahaan yang sama di rentang yang sama.
+        $exists = PayrollPeriod::where('tenant_id', $tenantId)
+            ->where('company_id', $data['company_id'])
+            ->where('name', $data['period_name'])
+            ->exists();
+        if ($exists) {
+            Notification::make()
+                ->title('Periode sudah ada')
+                ->body("Periode {$data['period_name']} untuk perusahaan ini sudah dibuat. Buka Payroll Runs untuk re-run.")
+                ->warning()
+                ->send();
+            return;
+        }
 
-        $run = PayrollRun::create([
-            'tenant_id' => auth()->user()->tenant_id,
-            'payroll_period_id' => $period->id,
-            'run_type' => $data['run_type'] ?? 'regular',
-            'status' => 'draft',
-            'created_by_user_id' => auth()->id(),
-        ]);
+        try {
+            $period = PayrollPeriod::create([
+                'tenant_id' => $tenantId,
+                'company_id' => $data['company_id'],
+                'name' => $data['period_name'],
+                'period_type' => $data['period_type'],
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'],
+                'cutoff_attendance_date' => $data['cutoff_attendance_date'],
+                'payroll_date' => $data['payroll_date'],
+                'status' => 'cutoff',
+            ]);
 
-        app(PayrollCalculationService::class)->runForRun($run, auth()->user()->tenant_id);
+            $run = PayrollRun::create([
+                'tenant_id' => $tenantId,
+                'payroll_period_id' => $period->id,
+                'run_type' => $data['run_type'] ?? 'regular',
+                'status' => 'draft',
+                'created_by_user_id' => auth()->id(),
+            ]);
+
+            app(PayrollCalculationService::class)->runForRun($run, $tenantId);
+        } catch (\Throwable $e) {
+            report($e);
+            Notification::make()
+                ->title('Payroll gagal dihitung')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+            return;
+        }
 
         Notification::make()
             ->title('Payroll dihitung')

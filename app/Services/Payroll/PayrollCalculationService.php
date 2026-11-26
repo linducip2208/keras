@@ -24,7 +24,15 @@ class PayrollCalculationService
     public function runForRun(PayrollRun $run, int $tenantId): void
     {
         DB::transaction(function () use ($run, $tenantId) {
-            $period = PayrollPeriod::find($run->payroll_period_id);
+            $period = PayrollPeriod::where('tenant_id', $tenantId)->find($run->payroll_period_id);
+            abort_if(!$period, 422, 'Periode payroll tidak ditemukan untuk tenant ini.');
+
+            // Tahun regulasi (TER/BPJS/PTKP) mengikuti tanggal periode — bukan now().
+            $refDate = $period->payroll_date ?? $period->end_date ?? now();
+            $regYear = (int) $refDate->format('Y');
+            $this->taxCalc->setYear($regYear);
+            $this->bpjsCalc->setYear($regYear);
+
             $employees = Employee::query()
                 ->where('tenant_id', $tenantId)
                 ->where('company_id', $period->company_id)
@@ -38,7 +46,7 @@ class PayrollCalculationService
             $totals = ['gross' => 0, 'net' => 0, 'tax' => 0, 'bpjs_employer' => 0, 'bpjs_employee' => 0];
 
             foreach ($employees as $employee) {
-                $result = $this->calculateForEmployee($employee, $run, $components, $tenantId);
+                $result = $this->calculateForEmployee($employee, $run, $components, $tenantId, $period);
                 $totals['gross'] += $result['gross'];
                 $totals['net'] += $result['net_pay'];
                 $totals['tax'] += $result['pph_21'];
@@ -58,7 +66,7 @@ class PayrollCalculationService
         });
     }
 
-    private function calculateForEmployee(Employee $employee, PayrollRun $run, $components, int $tenantId): array
+    private function calculateForEmployee(Employee $employee, PayrollRun $run, $components, int $tenantId, PayrollPeriod $period): array
     {
         // Basic: ambil gaji pokok dari kontrak aktif
         $contract = $employee->contracts()->where('status', 'active')->latest()->first();
@@ -100,13 +108,15 @@ class PayrollCalculationService
             }
         }
 
-        // Hitung BPJS
+        // Hitung BPJS dari basis BPJS (gapok + komponen ber-flag bpjs).
         $bpjsResult = $this->bpjsCalc->calculateAll($bpjsBasis);
 
-        // Hitung PPh 21
-        // Pengurang: biaya jabatan (5% maks 500k/bulan) + BPJS karyawan
-        $taxableMinusDeduction = max(0, $taxableGross - min($taxableGross * 0.05, 500_000) - $bpjsResult['total_employee']);
-        $taxResult = $this->taxCalc->calculate($taxableMinusDeduction, $employee->ptkp_status);
+        // Hitung PPh 21 TER (PMK 168/2023): tarif efektif dikenakan LANGSUNG
+        // ke penghasilan bruto sebulan (tanpa pengurang biaya jabatan / iuran).
+        // Biaya jabatan (5%, maks 500rb/bln) + iuran karyawan hanya dipakai
+        // pada koreksi progresif tahunan (Masa Pajak Terakhir / Desember).
+        $taxResult = $this->taxCalc->calculate($taxableGross, $employee->ptkp_status);
+        $jobExpenseInfo = min($taxableGross * 0.05, 500_000);
 
         // Final net
         $netPay = $earnings - $deductions - $taxResult['pph_21'] - $bpjsResult['total_employee'];
@@ -123,20 +133,26 @@ class PayrollCalculationService
             'calculated_at' => now(),
         ]);
 
-        // Simpan tax_calculations
+        // Simpan tax_calculations. gross_basis = bruto kena TER (bulanan);
+        // periode mengikuti tanggal payroll, bukan now().
+        $refDate = $period->payroll_date ?? $period->end_date ?? now();
         TaxCalculation::create([
             'tenant_id' => $tenantId,
             'payroll_item_id' => $item->id,
             'employee_id' => $employee->id,
-            'period_year' => (int) now()->format('Y'),
-            'period_month' => (int) now()->format('n'),
-            'gross_basis' => $taxableMinusDeduction,
+            'period_year' => (int) $refDate->format('Y'),
+            'period_month' => (int) $refDate->format('n'),
+            'gross_basis' => $taxableGross,
             'ptkp_amount' => $this->taxCalc->annualPtkp($employee->ptkp_status),
             'ter_category' => $taxResult['ter_category'],
             'ter_rate' => $taxResult['ter_rate'],
             'pph_21_amount' => $taxResult['pph_21'],
             'method_used' => 'ter',
-            'calculation_breakdown' => ['note' => $taxResult['breakdown']],
+            'calculation_breakdown' => [
+                'note' => $taxResult['breakdown'],
+                'job_expense_monthly_info' => $jobExpenseInfo,
+                'bpjs_employee' => $bpjsResult['total_employee'],
+            ],
         ]);
 
         // Simpan bpjs_calculations

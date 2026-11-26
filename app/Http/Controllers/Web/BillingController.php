@@ -45,12 +45,15 @@ class BillingController extends Controller
         }
 
         $data = $request->validate([
-            'adapter_config_id' => 'required|exists:adapter_configs,id',
+            'adapter_config_id' => 'required|integer',
             'payment_method' => 'required|string',
             'channel_code' => 'nullable|string',
         ]);
 
-        $adapter = AdapterConfig::findOrFail($data['adapter_config_id']);
+        // Tenant-scoped: gateway milik tenant lain tidak bisa dipakai.
+        $adapter = AdapterConfig::where('tenant_id', $invoice->tenant_id)
+            ->where('is_active', true)
+            ->findOrFail($data['adapter_config_id']);
 
         $payment = $this->billing->createPayment($invoice, $adapter, $data['payment_method']);
 

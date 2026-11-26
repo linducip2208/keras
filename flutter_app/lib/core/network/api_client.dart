@@ -6,6 +6,10 @@ class ApiClient {
   static const _storage = FlutterSecureStorage();
   static const _tokenKey = 'auth_token';
 
+  /// Dipasang dari AuthGate: dipanggil saat API mengembalikan 401,
+  /// agar UI dipaksa kembali ke Login (bukan menggantung di Dashboard).
+  static void Function()? onUnauthorized;
+
   late final Dio dio;
 
   ApiClient({String? baseUrl}) {
@@ -28,9 +32,12 @@ class ApiClient {
         handler.next(options);
       },
       onError: (e, handler) {
-        // Logout on 401
+        // Logout on 401 + paksa UI kembali ke Login via hook.
         if (e.response?.statusCode == 401) {
           _storage.delete(key: _tokenKey);
+          try {
+            onUnauthorized?.call();
+          } catch (_) {}
         }
         handler.next(e);
       },
